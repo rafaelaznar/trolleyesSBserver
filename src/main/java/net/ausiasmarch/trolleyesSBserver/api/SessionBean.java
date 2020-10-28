@@ -1,23 +1,24 @@
 package net.ausiasmarch.trolleyesSBserver.api;
 
 public class SessionBean {
-    private String Saludo;
-    private Integer Codigo;
+    private String Message;
+    private Integer Status;
 
-    public String getSaludo() {
-        return Saludo;
+    public String getMessage() {
+        return Message;
     }
 
-    public void setSaludo(String Saludo) {
-        this.Saludo = Saludo;
+    public void setMessage(String Message) {
+        this.Message = Message;
     }
 
-    public Integer getCodigo() {
-        return Codigo;
+    public Integer getStatus() {
+        return Status;
     }
 
-    public void setCodigo(Integer Codigo) {
-        this.Codigo = Codigo;
+    public void setStatus(Integer Status) {
+        this.Status = Status;
     }
+
 
 }
