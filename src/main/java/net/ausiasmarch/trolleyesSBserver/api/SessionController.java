@@ -1,5 +1,7 @@
 package net.ausiasmarch.trolleyesSBserver.api;
 
+import net.ausiasmarch.trolleyesSBserver.bean.UsuarioBean;
+import net.ausiasmarch.trolleyesSBserver.bean.ResponseBean;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,30 +23,30 @@ public class SessionController {
 
     @GetMapping("/private")
     public ResponseEntity<?> secret() {
-        SessionBean oSessionBean = (SessionBean) oHttpSession.getAttribute("usuario");
+        ResponseBean oSessionBean = (ResponseBean) oHttpSession.getAttribute("usuario");
         if (oSessionBean == null) {
-            SessionBean oSessionBean2 = new SessionBean();
+            ResponseBean oSessionBean2 = new ResponseBean();
             oSessionBean2.setMessage("NO SESSION");
             oSessionBean2.setStatus(403);
-            return new ResponseEntity<SessionBean>(oSessionBean2, HttpStatus.OK);
+            return new ResponseEntity<ResponseBean>(oSessionBean2, HttpStatus.OK);
         } else {
-            SessionBean oSessionBean3 = new SessionBean();
+            ResponseBean oSessionBean3 = new ResponseBean();
             oSessionBean3.setMessage("HOLA MUNDO SECRETO");
             oSessionBean3.setStatus(200);
-            return new ResponseEntity<SessionBean>(oSessionBean3, HttpStatus.OK);
+            return new ResponseEntity<ResponseBean>(oSessionBean3, HttpStatus.OK);
         }
     }
 
     @GetMapping("/")
     public ResponseEntity<?> check() {
-        SessionBean oSessionBean = (SessionBean) oHttpSession.getAttribute("usuario");
+        ResponseBean oSessionBean = (ResponseBean) oHttpSession.getAttribute("usuario");
         if (oSessionBean == null) {
-            SessionBean oSessionBean2 = new SessionBean();
+            ResponseBean oSessionBean2 = new ResponseBean();
             oSessionBean2.setMessage("NO SESSION");
             oSessionBean2.setStatus(403);
-            return new ResponseEntity<SessionBean>(oSessionBean2, HttpStatus.OK);
+            return new ResponseEntity<ResponseBean>(oSessionBean2, HttpStatus.OK);
         } else {
-            return new ResponseEntity<SessionBean>(oSessionBean, HttpStatus.OK);
+            return new ResponseEntity<ResponseBean>(oSessionBean, HttpStatus.OK);
         }
     }
 
@@ -52,26 +54,26 @@ public class SessionController {
     public ResponseEntity<?> login(@RequestBody UsuarioBean oUsuarioBean) {
         if (oUsuarioBean.getLogin().equalsIgnoreCase("rafa")) {
             if (oUsuarioBean.getPassword().equalsIgnoreCase("79063e8037fff16d297a1fe65136f1251126cddb2cc9870ecf8d653835538e85")) {
-                SessionBean oSessionBean = new SessionBean();
+                ResponseBean oSessionBean = new ResponseBean();
                 oSessionBean.setMessage(oUsuarioBean.getLogin());
                 oSessionBean.setStatus(200);
                 oHttpSession.setAttribute("usuario", oSessionBean);
-                return new ResponseEntity<SessionBean>(oSessionBean, HttpStatus.OK);
+                return new ResponseEntity<ResponseBean>(oSessionBean, HttpStatus.OK);
             }
         }
-        SessionBean oSessionBean = new SessionBean();
+        ResponseBean oSessionBean = new ResponseBean();
         oSessionBean.setMessage("ERROR");
         oSessionBean.setStatus(500);
-        return new ResponseEntity<SessionBean>(oSessionBean, HttpStatus.OK);
+        return new ResponseEntity<ResponseBean>(oSessionBean, HttpStatus.OK);
     }
 
     @DeleteMapping("/")
     public ResponseEntity<?> logout() {
         oHttpSession.invalidate();
-        SessionBean oSessionBean = new SessionBean();
+        ResponseBean oSessionBean = new ResponseBean();
         oSessionBean.setMessage("Bye");
         oSessionBean.setStatus(200);
-        return new ResponseEntity<SessionBean>(oSessionBean, HttpStatus.OK);
+        return new ResponseEntity<ResponseBean>(oSessionBean, HttpStatus.OK);
     }
 
 }

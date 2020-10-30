@@ -1,6 +1,6 @@
-package net.ausiasmarch.trolleyesSBserver.api;
+package net.ausiasmarch.trolleyesSBserver.bean;
 
-public class SessionBean {
+public class ResponseBean {
     private String Message;
     private Integer Status;
 
