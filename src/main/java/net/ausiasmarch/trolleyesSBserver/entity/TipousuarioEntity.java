@@ -1,6 +1,7 @@
 
 package net.ausiasmarch.trolleyesSBserver.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "tipousuario")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
 public class TipousuarioEntity implements Serializable {
     
     @Id
