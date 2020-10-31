@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/tipoproducto")
-public class TipoProductoController {
+public class TipoproductoController {
 
     @Autowired
     HttpSession oHttpSession;
