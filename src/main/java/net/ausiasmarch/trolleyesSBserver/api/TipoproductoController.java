@@ -19,16 +19,16 @@ public class TipoproductoController {
     HttpSession oHttpSession;	
 
     @Autowired
-    TipoproductoRepository oTipoProductoRepository;
+    TipoproductoRepository oTipoproductoRepository;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
-        return new ResponseEntity<TipoproductoEntity>(oTipoProductoRepository.getOne(id), HttpStatus.OK);
+        return new ResponseEntity<TipoproductoEntity>(oTipoproductoRepository.getOne(id), HttpStatus.OK);
     }
 
     @GetMapping("/count")
     public ResponseEntity<?> count() {
-        return new ResponseEntity<Long>(oTipoProductoRepository.count(), HttpStatus.OK);
+        return new ResponseEntity<Long>(oTipoproductoRepository.count(), HttpStatus.OK);
     }
 
 }
