@@ -21,11 +21,12 @@ public class TipoproductoController {
     HttpSession oHttpSession;
 
     @Autowired
-    TipoproductoRepository oTipoProductoRepository;
+
+    TipoproductoRepository oTipoproductoRepository;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
-        return new ResponseEntity<TipoproductoEntity>(oTipoProductoRepository.getOne(id), HttpStatus.OK);
+        return new ResponseEntity<TipoproductoEntity>(oTipoproductoRepository.getOne(id), HttpStatus.OK);
     }
 
 }
