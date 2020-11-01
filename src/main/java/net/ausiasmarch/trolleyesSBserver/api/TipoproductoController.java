@@ -26,4 +26,9 @@ public class TipoproductoController {
         return new ResponseEntity<TipoproductoEntity>(oTipoProductoRepository.getOne(id), HttpStatus.OK);
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<?> count() {
+        return new ResponseEntity<Long>(oTipoProductoRepository.count(), HttpStatus.OK);
+    }
+
 }
