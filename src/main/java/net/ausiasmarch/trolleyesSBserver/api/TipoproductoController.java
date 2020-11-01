@@ -1,4 +1,4 @@
-package net.ausiasmarch.trolleyesSBserver.api;
+package net.ausiasmarch.trolleyesSBserver.api;	
 
 import javax.servlet.http.HttpSession;
 import net.ausiasmarch.trolleyesSBserver.entity.TipoproductoEntity;
@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/tipoproducto")
-public class TipoproductoController {
+@RestController	
+@RequestMapping("/tipoproducto")	
+public class TipoproductoController {	
 
-    @Autowired
-    HttpSession oHttpSession;
+    @Autowired	
+    HttpSession oHttpSession;	
 
     @Autowired
     TipoproductoRepository oTipoProductoRepository;
