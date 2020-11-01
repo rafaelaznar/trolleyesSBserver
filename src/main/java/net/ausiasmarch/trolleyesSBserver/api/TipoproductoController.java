@@ -1,8 +1,9 @@
 package net.ausiasmarch.trolleyesSBserver.api;
 
 import javax.servlet.http.HttpSession;
-import net.ausiasmarch.trolleyesSBserver.entity.TipousuarioEntity;
-import net.ausiasmarch.trolleyesSBserver.repository.TipousuarioRepository;
+import net.ausiasmarch.trolleyesSBserver.entity.TipoproductoEntity;
+import net.ausiasmarch.trolleyesSBserver.repository.TipoproductoRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +20,11 @@ public class TipoproductoController {
     HttpSession oHttpSession;
 
     @Autowired
-    TipoProductoRepository oTipoProductoRepository;
+    TipoproductoRepository oTipoproductoRepository;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
-        return new ResponseEntity<TipoProductoEntity>(oTipoProductoRepository.getOne(id), HttpStatus.OK);
+        return new ResponseEntity<TipoproductoEntity>(oTipoproductoRepository.getOne(id), HttpStatus.OK);
     }
 
 }
