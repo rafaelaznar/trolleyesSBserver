@@ -2,6 +2,7 @@
 package net.ausiasmarch.trolleyesSBserver.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -17,7 +18,6 @@ import javax.persistence.Table;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
 public class FacturaEntity implements Serializable{
     
-    private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class FacturaEntity implements Serializable{
     private LocalDateTime fecha;
     private Integer iva;
     private Long id_usuario;
-    private Integer pagado;
+    private Boolean pagado;
 
     public Long getId() {
         return id;
@@ -60,11 +60,11 @@ public class FacturaEntity implements Serializable{
         this.id_usuario = id_usuario;
     }
 
-    public Integer getPagado() {
+    public Boolean getPagado() {
         return pagado;
     }
 
-    public void setPagado(Integer pagado) {
+    public void setPagado(Boolean pagado) {
         this.pagado = pagado;
     }
     
