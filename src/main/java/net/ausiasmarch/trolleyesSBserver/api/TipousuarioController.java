@@ -27,4 +27,9 @@ public class TipousuarioController {
         return new ResponseEntity<TipousuarioEntity>(oTipousuarioRepository.getOne(id), HttpStatus.OK);
     }
     
+    @GetMapping("/count")
+    public ResponseEntity<?> count() {
+        return new ResponseEntity<Long>(oTipousuarioRepository.count(), HttpStatus.OK);
+    }
+    
 }
