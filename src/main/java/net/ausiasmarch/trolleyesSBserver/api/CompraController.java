@@ -40,4 +40,9 @@ public class CompraController {
         }
     }
     
+    @GetMapping("/count")
+    public ResponseEntity<?> count() {
+        return new ResponseEntity<Long>(oCompraRepository.count(), HttpStatus.OK);
+    }
+    
 }
