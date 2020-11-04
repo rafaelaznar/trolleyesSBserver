@@ -1,7 +1,9 @@
 
 package net.ausiasmarch.trolleyesSBserver.api;
 
+import java.util.List;
 import javax.servlet.http.HttpSession;
+import net.ausiasmarch.trolleyesSBserver.bean.ResponseBean;
 import net.ausiasmarch.trolleyesSBserver.entity.CarritoEntity;
 import net.ausiasmarch.trolleyesSBserver.repository.CarritoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,4 +29,15 @@ public class CarritoController {
         return new ResponseEntity<CarritoEntity>(oCarritoRepository.getOne(id), HttpStatus.OK);
     }
     
+    @GetMapping("/all")
+    public ResponseEntity<?> all() {
+        if (oCarritoRepository.count() <= 1000) {
+            return new ResponseEntity<List<CarritoEntity>>(oCarritoRepository.findAll(), HttpStatus.OK);
+        } else {
+            ResponseBean oSsesionBean = new ResponseBean();
+            oSsesionBean.setMessage("ERROR: TOO MUCH REGISTRIES");
+            oSsesionBean.setStatus(500);
+            return new ResponseEntity<ResponseBean>(oSsesionBean, HttpStatus.OK);
+        }
+    }
 }
