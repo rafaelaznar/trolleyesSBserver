@@ -29,6 +29,10 @@ public class CarritoController {
         return new ResponseEntity<CarritoEntity>(oCarritoRepository.getOne(id), HttpStatus.OK);
     }
     
+    @GetMapping("/count")
+    public ResponseEntity<?> count() {
+        return new ResponseEntity<Long>(oCarritoRepository.count(), HttpStatus.OK);
+    }
     @GetMapping("/all")
     public ResponseEntity<?> all() {
         if (oCarritoRepository.count() <= 1000) {
