@@ -46,4 +46,10 @@ public class UsuarioController {
                 return new ResponseEntity<UsuarioEntity>(oUsuarioRepository.save(oUsuarioEntity), HttpStatus.OK);
     }
 
+        
+            @GetMapping("/count")
+    public ResponseEntity<?> count() {
+        return new ResponseEntity<Long>(oUsuarioRepository.count(), HttpStatus.OK);
+    }
+        
 }
