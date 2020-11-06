@@ -7,13 +7,13 @@ package net.ausiasmarch.trolleyesSBserver.api;
 
 import java.util.List;
 import javax.servlet.http.HttpSession;
-import net.ausiasmarch.trolleyesSBserver.bean.ResponseBean;
 import net.ausiasmarch.trolleyesSBserver.entity.ProductoEntity;
 import net.ausiasmarch.trolleyesSBserver.repository.ProductoRepository;
 import net.ausiasmarch.trolleyesSBserver.service.FillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +36,11 @@ public class ProductoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
-        return new ResponseEntity<ProductoEntity>(oProductoRepository.getOne(id), HttpStatus.OK);
+        if (oProductoRepository.existsById(id)) {
+            return new ResponseEntity<ProductoEntity>(oProductoRepository.getOne(id), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<ProductoEntity>(oProductoRepository.getOne(id), HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/all")
@@ -44,10 +48,7 @@ public class ProductoController {
         if (oProductoRepository.count() <= 1000) {
             return new ResponseEntity<List<ProductoEntity>>(oProductoRepository.findAll(), HttpStatus.OK);
         } else {
-            ResponseBean oSessionBean = new ResponseBean();
-            oSessionBean.setMessage("ERROR: TOO MUCH REGISTRIES");
-            oSessionBean.setStatus(500);
-            return new ResponseEntity<ResponseBean>(oSessionBean, HttpStatus.OK);
+            return new ResponseEntity<>(null, HttpStatus.PAYLOAD_TOO_LARGE);
         }
     }
 
@@ -63,12 +64,25 @@ public class ProductoController {
 
     @PostMapping("/fill/{amount}")
     public ResponseEntity<?> fill(@PathVariable(value = "amount") Long amount) {
+        Long countInicio = oProductoRepository.count();
         oFillService.productoFill(amount);
-        ResponseBean oResponseBean = new ResponseBean();
-        oResponseBean.setMessage("OK");
-        oResponseBean.setStatus(200);
-        return new ResponseEntity<ResponseBean>(oResponseBean, HttpStatus.OK);
+        Long countFinal = oProductoRepository.count();
+        Long diferencia = countFinal - countInicio;
+        if (diferencia <= 0) {
+            return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+        } else {
+            return new ResponseEntity<Long>(diferencia, HttpStatus.OK);
+        }
+    }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
+        oProductoRepository.deleteById(id);
+        if (oProductoRepository.existsById(id)) {
+            return new ResponseEntity<Long>(id, HttpStatus.NOT_MODIFIED);
+        } else {
+            return new ResponseEntity<Long>(0L, HttpStatus.OK);
+        }
     }
 
 }
