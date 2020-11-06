@@ -1,4 +1,3 @@
-
 package net.ausiasmarch.trolleyesSBserver.api;
 
 import java.util.List;
@@ -19,22 +18,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/carrito")
 public class CarritoController {
-    
+
     @Autowired
     HttpSession oHttpSession;
 
     @Autowired
     CarritoRepository oCarritoRepository;
-    
+
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
-        return new ResponseEntity<CarritoEntity>(oCarritoRepository.getOne(id), HttpStatus.OK);
+        if (oCarritoRepository.existsById(id)) {
+            return new ResponseEntity<CarritoEntity>(oCarritoRepository.getOne(id), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<CarritoEntity>(oCarritoRepository.getOne(id), HttpStatus.NOT_FOUND);
+        }
     }
-    
+
     @GetMapping("/count")
     public ResponseEntity<?> count() {
         return new ResponseEntity<Long>(oCarritoRepository.count(), HttpStatus.OK);
     }
+
     @GetMapping("/all")
     public ResponseEntity<?> all() {
         if (oCarritoRepository.count() <= 1000) {
@@ -46,11 +50,11 @@ public class CarritoController {
             return new ResponseEntity<ResponseBean>(oSsesionBean, HttpStatus.OK);
         }
     }
-    
+
     @PostMapping("/")
-    public ResponseEntity<?> create (@RequestBody CarritoEntity oCarritoEntity) {
-                return new ResponseEntity<CarritoEntity>(oCarritoRepository.save(oCarritoEntity), HttpStatus.OK);
+    public ResponseEntity<?> create(@RequestBody CarritoEntity oCarritoEntity) {
+        return new ResponseEntity<CarritoEntity>(oCarritoRepository.save(oCarritoEntity), HttpStatus.OK);
 
     }
-    
+
 }
