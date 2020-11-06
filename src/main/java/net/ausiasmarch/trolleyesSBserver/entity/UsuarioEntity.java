@@ -5,6 +5,7 @@
  */
 package net.ausiasmarch.trolleyesSBserver.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -30,12 +31,16 @@ public class UsuarioEntity implements Serializable {
     private String apellido1;
     private String apellido2;
     private String login;
+    @JsonIgnore
     private String password;
     private String email;
     private Integer descuento;
     private Long id_tipousuario;
+    @JsonIgnore
     private String token;
+    @JsonIgnore
     private boolean validado;
+    @JsonIgnore
     private boolean activo;
 
     public Long getId() {
