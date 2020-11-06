@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,12 @@ public class FacturaController {
     
     @Autowired
     FacturaRepository oFacturaRepository;
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
+        return new ResponseEntity<FacturaEntity>(oFacturaRepository.getOne(id), HttpStatus.OK);
+    }
+    
 
     @GetMapping("/all")
     public ResponseEntity<?> all() {
@@ -36,12 +43,16 @@ public class FacturaController {
             oSessionBean.setStatus(500);
             return new ResponseEntity<ResponseBean>(oSessionBean, HttpStatus.OK);
         }
+        
     }
-    //Al probar en el postman, recordar que el formato de fecha JSOn para el localdatetime es "YYYY-MM-DDTHH-MM-SS.SSS"
+        
+        
     @PostMapping("/")
     public ResponseEntity<?> create (@RequestBody FacturaEntity oFacturaEntity) {
                 return new ResponseEntity<FacturaEntity>(oFacturaRepository.save(oFacturaEntity), HttpStatus.OK);
 
     }
+    
+    
     
 }
