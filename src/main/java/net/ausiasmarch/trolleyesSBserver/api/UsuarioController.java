@@ -40,16 +40,15 @@ public class UsuarioController {
             return new ResponseEntity<ResponseBean>(oSessionBean, HttpStatus.OK);
         }
     }
-    
-        @PostMapping("/")
-        public ResponseEntity<?> create (@RequestBody UsuarioEntity oUsuarioEntity) {
-                return new ResponseEntity<UsuarioEntity>(oUsuarioRepository.save(oUsuarioEntity), HttpStatus.OK);
+
+    @PostMapping("/")
+    public ResponseEntity<?> create(@RequestBody UsuarioEntity oUsuarioEntity) {
+        return new ResponseEntity<UsuarioEntity>(oUsuarioRepository.save(oUsuarioEntity), HttpStatus.OK);
     }
 
-        
-            @GetMapping("/count")
+    @GetMapping("/count")
     public ResponseEntity<?> count() {
         return new ResponseEntity<Long>(oUsuarioRepository.count(), HttpStatus.OK);
     }
-        
+
 }
