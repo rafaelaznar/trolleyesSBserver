@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import net.ausiasmarch.trolleyesSBserver.bean.ResponseBean;
 import net.ausiasmarch.trolleyesSBserver.entity.ProductoEntity;
 import net.ausiasmarch.trolleyesSBserver.repository.ProductoRepository;
+import net.ausiasmarch.trolleyesSBserver.service.FillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,9 @@ public class ProductoController {
 
     @Autowired
     ProductoRepository oProductoRepository;
+
+    @Autowired
+    FillService oFillService;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
@@ -55,6 +59,16 @@ public class ProductoController {
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestBody ProductoEntity oProductoEntity) {
         return new ResponseEntity<ProductoEntity>(oProductoRepository.save(oProductoEntity), HttpStatus.OK);
+    }
+
+    @PostMapping("/fill/{amount}")
+    public ResponseEntity<?> fill(@PathVariable(value = "amount") Long amount) {
+        oFillService.productoFill(amount);
+        ResponseBean oResponseBean = new ResponseBean();
+        oResponseBean.setMessage("OK");
+        oResponseBean.setStatus(200);
+        return new ResponseEntity<ResponseBean>(oResponseBean, HttpStatus.OK);
+
     }
 
 }

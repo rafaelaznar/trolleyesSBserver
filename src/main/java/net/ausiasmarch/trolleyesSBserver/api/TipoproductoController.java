@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 import net.ausiasmarch.trolleyesSBserver.bean.ResponseBean;
 import net.ausiasmarch.trolleyesSBserver.entity.TipoproductoEntity;
 import net.ausiasmarch.trolleyesSBserver.repository.TipoproductoRepository;
+import net.ausiasmarch.trolleyesSBserver.service.FillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,9 @@ public class TipoproductoController {
 
     @Autowired
     TipoproductoRepository oTipoproductoRepository;
+
+    @Autowired
+    FillService oFillService;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
@@ -46,10 +50,20 @@ public class TipoproductoController {
     public ResponseEntity<?> count() {
         return new ResponseEntity<Long>(oTipoproductoRepository.count(), HttpStatus.OK);
     }
-    
+
     @PostMapping("/")
-    public ResponseEntity<?> create (@RequestBody TipoproductoEntity oTipoproductoEntity) {
-                return new ResponseEntity<TipoproductoEntity>(oTipoproductoRepository.save(oTipoproductoEntity), HttpStatus.OK);
+    public ResponseEntity<?> create(@RequestBody TipoproductoEntity oTipoproductoEntity) {
+        return new ResponseEntity<TipoproductoEntity>(oTipoproductoRepository.save(oTipoproductoEntity), HttpStatus.OK);
+
+    }
+
+    @PostMapping("/fill")
+    public ResponseEntity<?> fill() {
+        oFillService.tipoproductoFill();
+        ResponseBean oSessionBean = new ResponseBean();
+        oSessionBean.setMessage("OK");
+        oSessionBean.setStatus(200);
+        return new ResponseEntity<ResponseBean>(oSessionBean, HttpStatus.OK);
 
     }
 
