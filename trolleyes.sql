@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 4.9.5deb2
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 23-10-2020 a las 18:38:30
--- Versión del servidor: 8.0.21
--- Versión de PHP: 7.4.10
+-- Tiempo de generación: 01-11-2020 a las 10:09:05
+-- Versión del servidor: 8.0.22-0ubuntu0.20.04.2
+-- Versión de PHP: 7.4.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -20,6 +21,27 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `trolleyes`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `carrito`
+--
+
+CREATE TABLE `carrito` (
+  `id` bigint NOT NULL,
+  `cantidad` int NOT NULL,
+  `precio` double(10,2) NOT NULL,
+  `id_producto` bigint NOT NULL,
+  `id_usuario` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `carrito`
+--
+
+INSERT INTO `carrito` (`id`, `cantidad`, `precio`, `id_producto`, `id_usuario`) VALUES
+(1, 1, 10.24, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -60,11 +82,11 @@ CREATE TABLE `factura` (
 
 CREATE TABLE `producto` (
   `id` bigint NOT NULL,
-  `codigo` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `nombre` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `codigo` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `nombre` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `existencias` int NOT NULL,
   `precio` double(10,2) NOT NULL,
-  `imagen` varchar(1024) COLLATE utf8_unicode_ci NOT NULL,
+  `imagen` varchar(1024) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `descuento` int NOT NULL,
   `id_tipoproducto` bigint NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -77,7 +99,7 @@ CREATE TABLE `producto` (
 
 CREATE TABLE `tipoproducto` (
   `id` bigint NOT NULL,
-  `nombre` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+  `nombre` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -118,6 +140,12 @@ CREATE TABLE `usuario` (
 --
 
 --
+-- Indices de la tabla `carrito`
+--
+ALTER TABLE `carrito`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `compra`
 --
 ALTER TABLE `compra`
@@ -150,6 +178,12 @@ ALTER TABLE `tipousuario`
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
+
+--
+-- AUTO_INCREMENT de la tabla `carrito`
+--
+ALTER TABLE `carrito`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `compra`

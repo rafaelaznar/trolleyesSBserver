@@ -1,35 +1,32 @@
+
 package net.ausiasmarch.trolleyesSBserver.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+
 
 @Entity
 @Table(name = "factura")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
 public class FacturaEntity implements Serializable{
     
-    private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="id")
     private Long id;
-    
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fecha;
-    
-    private int iva;    
-    private int pagado;    
+    private LocalDateTime fecha;
+    private Integer iva;
     private Long id_usuario;
+    private Boolean pagado;
 
     public Long getId() {
         return id;
@@ -39,28 +36,20 @@ public class FacturaEntity implements Serializable{
         this.id = id;
     }
 
-    public Date getFecha() {
+    public LocalDateTime getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(LocalDateTime fecha) {
         this.fecha = fecha;
     }
 
-    public int getIva() {
+    public Integer getIva() {
         return iva;
     }
 
-    public void setIva(int iva) {
+    public void setIva(Integer iva) {
         this.iva = iva;
-    }
-
-    public int isPagado() {
-        return pagado;
-    }
-
-    public void setPagado(int pagado) {
-        this.pagado = pagado;
     }
 
     public Long getId_usuario() {
@@ -70,6 +59,16 @@ public class FacturaEntity implements Serializable{
     public void setId_usuario(Long id_usuario) {
         this.id_usuario = id_usuario;
     }
+
+    public Boolean getPagado() {
+        return pagado;
+    }
+
+    public void setPagado(Boolean pagado) {
+        this.pagado = pagado;
+    }
+    
+    
     
     
     
