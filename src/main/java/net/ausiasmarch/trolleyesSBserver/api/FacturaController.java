@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,6 +37,11 @@ public class FacturaController {
             return new ResponseEntity<ResponseBean>(oSessionBean, HttpStatus.OK);
         }
     }
-    
+    //Al probar en el postman, recordar que el formato de fecha JSOn para el localdatetime es "YYYY-MM-DDTHH-MM-SS.SSS"
+    @PostMapping("/")
+    public ResponseEntity<?> create (@RequestBody FacturaEntity oFacturaEntity) {
+                return new ResponseEntity<FacturaEntity>(oFacturaRepository.save(oFacturaEntity), HttpStatus.OK);
+
+    }
     
 }
