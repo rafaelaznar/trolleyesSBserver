@@ -10,10 +10,12 @@ import javax.servlet.http.HttpSession;
 import net.ausiasmarch.trolleyesSBserver.bean.ResponseBean;
 import net.ausiasmarch.trolleyesSBserver.entity.UsuarioEntity;
 import net.ausiasmarch.trolleyesSBserver.repository.UsuarioRepository;
+import net.ausiasmarch.trolleyesSBserver.service.FillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +30,9 @@ public class UsuarioController {
 
     @Autowired
     UsuarioRepository oUsuarioRepository;
+
+    @Autowired
+    FillService oFillService;
 
     @GetMapping("/all")
     public ResponseEntity<?> get() {
@@ -49,6 +54,20 @@ public class UsuarioController {
     @GetMapping("/count")
     public ResponseEntity<?> count() {
         return new ResponseEntity<Long>(oUsuarioRepository.count(), HttpStatus.OK);
+    }
+
+    @PostMapping("/fill/{amount}")
+    public ResponseEntity<?> fill(@PathVariable(value = "amount") Long amount) {
+
+        Long countInicio = oUsuarioRepository.count();
+        oFillService.usuarioFill(amount);
+        Long countFinal = oUsuarioRepository.count();
+        Long diferencia = countFinal - countInicio;
+        if (diferencia <= 0) {
+            return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+        } else {
+            return new ResponseEntity<Long>(diferencia, HttpStatus.OK);
+        }
     }
 
 }

@@ -195,20 +195,17 @@ public class FillService {
 
             UsuarioEntity oUsuarioEntity = new UsuarioEntity();
 
-            oUsuarioEntity.setDni(String.valueOf(RandomHelper.getRandomInt(11111111, 99999999) + RandomHelper.getRadomChar()));
-            String nombre = nombres[RandomHelper.getRandomInt(0, nombres.length)];
-            String apellido1 = apellidos[RandomHelper.getRandomInt(0, apellidos.length)];
-            String apellido2 = apellidos[RandomHelper.getRandomInt(0, apellidos.length)];
+            oUsuarioEntity.setDni(String.valueOf(RandomHelper.getRandomInt(11111111, 99999999) + String.valueOf(RandomHelper.getRadomChar()).toUpperCase()));
+            String nombre = nombres[(int) (Math.floor(Math.random() * ((nombres.length - 1) - 0 + 1) + 0))];
+            String apellido1 = apellidos[(int) (Math.floor(Math.random() * ((apellidos.length - 1) - 0 + 1) + 0))];
+            String apellido2 = apellidos[(int) (Math.floor(Math.random() * ((apellidos.length - 1) - 0 + 1) + 0))];
             oUsuarioEntity.setNombre(nombre);
             oUsuarioEntity.setApellido1(apellido1);
             oUsuarioEntity.setApellido2(apellido2);
-            //Corregir
-            oUsuarioEntity.setLogin(nombre.substring(0, 3) + apellido1.subSequence(0, 3) + apellido2.subSequence(0, 3));
-
+            //Maybe esta bien
+            oUsuarioEntity.setLogin(nombre.substring(0, 4) + apellido1.substring(0, 3) + apellido2.substring(0, 3) + String.valueOf(RandomHelper.getRandomInt(1, 999)));
             oUsuarioEntity.setPassword("da8ab09ab4889c6208116a675cad0b13e335943bd7fc418782d054b32fdfba04");
-
-            oUsuarioEntity.setEmail("NombreAp1" + "@ausiasmarch.net");
-
+            oUsuarioEntity.setEmail(nombre + apellido1.charAt(0) + "@ausiasmarch.net");
             oUsuarioEntity.setDescuento(0);
             oUsuarioEntity.setId_tipousuario(2L);
             oUsuarioEntity.setToken("");
@@ -216,9 +213,7 @@ public class FillService {
             oUsuarioEntity.setActivo(true);
 
             oUsuarioRepository.save(oUsuarioEntity);
-
         }
-
     }
 
 }
