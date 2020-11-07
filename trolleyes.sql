@@ -36,12 +36,6 @@ CREATE TABLE `carrito` (
   `id_usuario` bigint NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `carrito`
---
-
-INSERT INTO `carrito` (`id`, `cantidad`, `precio`, `id_producto`, `id_usuario`) VALUES
-(1, 1, 10.24, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -113,6 +107,13 @@ CREATE TABLE `tipousuario` (
   `nombre` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `tipousuario`
+--
+
+INSERT INTO `tipousuario` (`id`, `nombre`) VALUES
+(1, "Administrador"), (2, "Usuario");
+
 -- --------------------------------------------------------
 
 --
@@ -176,6 +177,12 @@ ALTER TABLE `tipousuario`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
@@ -183,7 +190,7 @@ ALTER TABLE `tipousuario`
 -- AUTO_INCREMENT de la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `compra`
@@ -214,6 +221,16 @@ ALTER TABLE `tipoproducto`
 --
 ALTER TABLE `tipousuario`
   MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+
+
+--
+-- AUTO_INCREMENT de la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+
+
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
