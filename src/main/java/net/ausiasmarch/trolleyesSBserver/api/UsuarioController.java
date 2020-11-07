@@ -50,5 +50,4 @@ public class UsuarioController {
     public ResponseEntity<?> count() {
         return new ResponseEntity<Long>(oUsuarioRepository.count(), HttpStatus.OK);
     }
-
 }
