@@ -5,9 +5,12 @@
  */
 package net.ausiasmarch.trolleyesSBserver.service;
 
+import java.time.ZoneId;
+import net.ausiasmarch.trolleyesSBserver.entity.CompraEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.ProductoEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.TipoproductoEntity;
 import net.ausiasmarch.trolleyesSBserver.helper.RandomHelper;
+import net.ausiasmarch.trolleyesSBserver.repository.CompraRepository;
 import net.ausiasmarch.trolleyesSBserver.repository.ProductoRepository;
 import net.ausiasmarch.trolleyesSBserver.repository.TipoproductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,9 @@ public class FillService {
 
     @Autowired
     ProductoRepository oProductoRepository;
+    
+    @Autowired
+    CompraRepository oCompraRepository;
 
     public int tipoproductoFill() {
 
@@ -161,4 +167,16 @@ public class FillService {
         
     }
 
+    public void CompraFill(Long compras) {
+    
+        for(int i=1; i<=compras;i++){
+        CompraEntity oCompraEntity = new CompraEntity();
+        oCompraEntity.setCantidad(RandomHelper.getRandomInt(1, 5));
+        oCompraEntity.setPrecio(RandomHelper.getRadomDouble(1, 200));
+        oCompraEntity.setFecha(RandomHelper.getRadomDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+        oCompraEntity.setDescuento_usuario(RandomHelper.getRandomInt(0, 2));
+        oCompraEntity.setDescuento_producto(RandomHelper.getRandomInt(0, 2));
+        oCompraEntity.setId_factura(Long.valueOf(RandomHelper.getRandomInt(1, 100)));
+        }
+    }
 }
