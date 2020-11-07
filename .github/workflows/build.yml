@@ -35,7 +35,7 @@ jobs:
       
     - name: Setting Up DB
       run: |
-        mysql -Tv -h mysql -P 3306 --protocol=tcp -u root -pbitnami < ./trolleyes.sql            
+        mysql -h mysql -P 3306 -u root -p bitnami trolleyes < ./trolleyes.sql            
       
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
