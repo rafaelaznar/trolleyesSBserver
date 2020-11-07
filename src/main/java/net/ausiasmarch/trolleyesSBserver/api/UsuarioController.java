@@ -52,13 +52,4 @@ public class UsuarioController {
         return new ResponseEntity<Long>(oUsuarioRepository.count(), HttpStatus.OK);
     }
     
-     @GetMapping("/{id}")
-    public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
-        if (oUsuarioRepository.existsById(id)) {
-            return new ResponseEntity<UsuarioEntity>(oUsuarioRepository.getOne(id), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<UsuarioEntity>(oUsuarioRepository.getOne(id), HttpStatus.NOT_FOUND);
-        }
-    }
-
 }
