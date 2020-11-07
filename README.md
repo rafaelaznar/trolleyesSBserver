@@ -3,6 +3,6 @@
 # trolleyesSBserver
 
 * Trolleyes is an online shopping site. 
-* This repo constains the server for the project.
+* This repo contains the API server for the project.
 * Written using Java and Spring Boot.
 * Uses Mysql Database.
