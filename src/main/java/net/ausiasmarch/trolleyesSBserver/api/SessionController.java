@@ -19,7 +19,7 @@ public class SessionController {
 
     @Autowired
     HttpSession oHttpSession;
-
+   
     @GetMapping("/")
     public ResponseEntity<?> check() {
         UsuarioEntity oSessionUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
