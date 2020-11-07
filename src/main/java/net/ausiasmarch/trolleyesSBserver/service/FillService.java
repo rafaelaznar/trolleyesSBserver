@@ -9,10 +9,14 @@ import java.time.ZoneId;
 import net.ausiasmarch.trolleyesSBserver.entity.CompraEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.ProductoEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.TipoproductoEntity;
+import net.ausiasmarch.trolleyesSBserver.entity.TipousuarioEntity;
+import net.ausiasmarch.trolleyesSBserver.entity.UsuarioEntity;
 import net.ausiasmarch.trolleyesSBserver.helper.RandomHelper;
 import net.ausiasmarch.trolleyesSBserver.repository.CompraRepository;
 import net.ausiasmarch.trolleyesSBserver.repository.ProductoRepository;
 import net.ausiasmarch.trolleyesSBserver.repository.TipoproductoRepository;
+import net.ausiasmarch.trolleyesSBserver.repository.TipousuarioRepository;
+import net.ausiasmarch.trolleyesSBserver.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +31,12 @@ public class FillService {
     
     @Autowired
     CompraRepository oCompraRepository;
+
+    @Autowired
+    TipousuarioRepository oTipousuarioRepository;
+
+    @Autowired
+    UsuarioRepository oUsuarioRepository;
 
     public int tipoproductoFill() {
 
@@ -76,7 +86,6 @@ public class FillService {
 
     public void productoFill(Long cantidad) {
 
-        
         for (int i = 1; i <= cantidad; i++) {
             ProductoEntity oProductoEntity = new ProductoEntity();
             oProductoEntity.setCodigo(RandomHelper.getRandomHexString(RandomHelper.getRandomInt(5, 10)).toUpperCase());
@@ -164,7 +173,53 @@ public class FillService {
             oProductoEntity.setPrecio(RandomHelper.getRadomDouble(1, 3000));
             oProductoRepository.save(oProductoEntity);
         }
-        
+
+    }
+
+    public void tipousuarioFill() {
+
+        TipousuarioEntity oTipousuarioEntity = new TipousuarioEntity();
+        oTipousuarioEntity.setNombre("Administrador");
+        oTipousuarioRepository.save(oTipousuarioEntity);
+
+        oTipousuarioEntity = new TipousuarioEntity();
+        oTipousuarioEntity.setNombre("Cliente");
+        oTipousuarioRepository.save(oTipousuarioEntity);
+
+    }
+
+    public void usuarioFill(Long cantidad) {
+
+        String[] nombres = {"Andrea", "David", "Baldomero", "Balduino", "Baldwin", "Baltasar", "Barry", "Bartolo",
+            "Bartolomé", "Baruc", "Baruj", "Candelaria", "Cándida", "Canela", "Caridad", "Carina", "Carisa",
+            "Caritina", "Carlota", "Baltazar"};
+        String[] apellidos = {"Gomez", "Guerrero", "Cardenas", "Cardiel", "Cardona", "Cardoso", "Cariaga", "Carillo",
+            "Carion", "Castiyo", "Castorena", "Castro", "Grande", "Grangenal", "Grano", "Grasia", "Griego",
+            "Grigalva"};
+
+        for (int i = 1; i <= cantidad; i++) {
+
+            UsuarioEntity oUsuarioEntity = new UsuarioEntity();
+
+            oUsuarioEntity.setDni(String.valueOf(RandomHelper.getRandomInt(11111111, 99999999) + String.valueOf(RandomHelper.getRadomChar()).toUpperCase()));
+            String nombre = nombres[(int) (Math.floor(Math.random() * ((nombres.length - 1) - 0 + 1) + 0))];
+            String apellido1 = apellidos[(int) (Math.floor(Math.random() * ((apellidos.length - 1) - 0 + 1) + 0))];
+            String apellido2 = apellidos[(int) (Math.floor(Math.random() * ((apellidos.length - 1) - 0 + 1) + 0))];
+            oUsuarioEntity.setNombre(nombre);
+            oUsuarioEntity.setApellido1(apellido1);
+            oUsuarioEntity.setApellido2(apellido2);
+            //Maybe esta bien
+            oUsuarioEntity.setLogin(nombre.substring(0, 4) + apellido1.substring(0, 3) + apellido2.substring(0, 3) + String.valueOf(RandomHelper.getRandomInt(1, 999)));
+            oUsuarioEntity.setPassword("da8ab09ab4889c6208116a675cad0b13e335943bd7fc418782d054b32fdfba04");
+            oUsuarioEntity.setEmail(nombre + apellido1.charAt(0) + "@ausiasmarch.net");
+            oUsuarioEntity.setDescuento(0);
+            oUsuarioEntity.setId_tipousuario(2L);
+            oUsuarioEntity.setToken("");
+            oUsuarioEntity.setValidado(true);
+            oUsuarioEntity.setActivo(true);
+
+            oUsuarioRepository.save(oUsuarioEntity);
+        }
     }
 
     public void CompraFill(Long compras) {
