@@ -35,7 +35,7 @@ jobs:
       
     - name: Setting Up DB
       run: |
-        mysql -uroot -pbitnami trolleyes< ./trolleyes.sql            
+        mysql --protocol=tcp -uroot -pbitnami trolleyes< ./trolleyes.sql            
       
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
