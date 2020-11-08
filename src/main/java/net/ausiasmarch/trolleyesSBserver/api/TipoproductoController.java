@@ -59,7 +59,6 @@ public class TipoproductoController {
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestBody TipoproductoEntity oTipoproductoEntity) {
         return new ResponseEntity<TipoproductoEntity>(oTipoproductoRepository.save(oTipoproductoEntity), HttpStatus.OK);
-
     }
 
     @PostMapping("/fill")
