@@ -12,19 +12,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/compra")
 public class CompraController {
-    
+
     @Autowired
     HttpSession oHttpSession;
 
     @Autowired
     CompraRepository oCompraRepository;
-    
+
     @Autowired
     FillService oFillService;
 
@@ -32,7 +33,7 @@ public class CompraController {
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
         return new ResponseEntity<CompraEntity>(oCompraRepository.getOne(id), HttpStatus.OK);
     }
-    
+
     @GetMapping("/all")
     public ResponseEntity<?> all() {
         if (oCompraRepository.count() <= 1000) {
@@ -44,12 +45,12 @@ public class CompraController {
             return new ResponseEntity<ResponseBean>(oSsesionBean, HttpStatus.OK);
         }
     }
-    
+
     @GetMapping("/count")
     public ResponseEntity<?> count() {
         return new ResponseEntity<Long>(oCompraRepository.count(), HttpStatus.OK);
     }
-    
+
     @PostMapping("/fill/{compras}")
     public ResponseEntity<?> fill(@PathVariable(value = "compras") Long compras) {
         Long countInicio = oCompraRepository.count();
@@ -62,4 +63,10 @@ public class CompraController {
             return new ResponseEntity<Long>(diferencia, HttpStatus.OK);
         }
     }
+
+    @PostMapping("/")
+    public ResponseEntity<?> create(@RequestBody CompraEntity oCompraEntity) {
+        return new ResponseEntity<CompraEntity>(oCompraRepository.save(oCompraEntity), HttpStatus.OK);
+    }
+
 }
