@@ -1,4 +1,3 @@
-
 package net.ausiasmarch.trolleyesSBserver.api;
 
 import java.util.List;
@@ -21,18 +20,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/factura")
 
 public class FacturaController {
-    
+
     @Autowired
     HttpSession oHttpSession;
-    
+
     @Autowired
     FacturaRepository oFacturaRepository;
-    
+
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
         return new ResponseEntity<FacturaEntity>(oFacturaRepository.getOne(id), HttpStatus.OK);
     }
-    
 
     @GetMapping("/all")
     public ResponseEntity<?> all() {
@@ -44,16 +42,15 @@ public class FacturaController {
             oSessionBean.setStatus(500);
             return new ResponseEntity<ResponseBean>(oSessionBean, HttpStatus.OK);
         }
-        
-    }
-        
-        
-    @PostMapping("/")
-    public ResponseEntity<?> create (@RequestBody FacturaEntity oFacturaEntity) {
-                return new ResponseEntity<FacturaEntity>(oFacturaRepository.save(oFacturaEntity), HttpStatus.OK);
 
     }
-    
+
+    @PostMapping("/")
+    public ResponseEntity<?> create(@RequestBody FacturaEntity oFacturaEntity) {
+        return new ResponseEntity<FacturaEntity>(oFacturaRepository.save(oFacturaEntity), HttpStatus.OK);
+
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         oFacturaRepository.deleteById(id);
@@ -63,7 +60,10 @@ public class FacturaController {
             return new ResponseEntity<Long>(0L, HttpStatus.OK);
         }
     }
-    
-    
-    
+
+    @GetMapping("/count")
+    public ResponseEntity<?> count() {
+        return new ResponseEntity<Long>(oFacturaRepository.count(), HttpStatus.OK);
+    }
+
 }
