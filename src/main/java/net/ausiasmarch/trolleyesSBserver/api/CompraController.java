@@ -5,11 +5,13 @@ import javax.servlet.http.HttpSession;
 import net.ausiasmarch.trolleyesSBserver.bean.ResponseBean;
 import net.ausiasmarch.trolleyesSBserver.entity.CompraEntity;
 import net.ausiasmarch.trolleyesSBserver.repository.CompraRepository;
+import net.ausiasmarch.trolleyesSBserver.service.FillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +24,9 @@ public class CompraController {
 
     @Autowired
     CompraRepository oCompraRepository;
+    
+    @Autowired
+    FillService oFillService;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
@@ -45,4 +50,16 @@ public class CompraController {
         return new ResponseEntity<Long>(oCompraRepository.count(), HttpStatus.OK);
     }
     
+    @PostMapping("/fill/{compras}")
+    public ResponseEntity<?> fill(@PathVariable(value = "compras") Long compras) {
+        Long countInicio = oCompraRepository.count();
+        oFillService.CompraFill(compras);
+        Long countFinal = oCompraRepository.count();
+        Long diferencia = countFinal - countInicio;
+        if (diferencia <= 0) {
+            return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+        } else {
+            return new ResponseEntity<Long>(diferencia, HttpStatus.OK);
+        }
+    }
 }
