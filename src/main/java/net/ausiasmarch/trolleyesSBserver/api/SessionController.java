@@ -49,7 +49,7 @@ public class SessionController {
     @DeleteMapping("/")
     public ResponseEntity<?> logout() {
         oHttpSession.invalidate();
-        return new ResponseEntity<>("BYE", HttpStatus.OK);        
+        return new ResponseEntity<>(null, HttpStatus.OK);        
     }
 
 }
