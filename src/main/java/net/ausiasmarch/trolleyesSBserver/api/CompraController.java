@@ -32,8 +32,12 @@ public class CompraController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
-        return new ResponseEntity<CompraEntity>(oCompraRepository.getOne(id), HttpStatus.OK);
-    }
+        if (oCompraRepository.existsById(id)){
+            return new ResponseEntity<CompraEntity>(oCompraRepository.getOne(id), HttpStatus.OK);
+        }else{        
+            return new ResponseEntity<CompraEntity>(oCompraRepository.getOne(id), HttpStatus.OK);
+        }
+    }    
 
     @GetMapping("/all")
     public ResponseEntity<?> all() {
