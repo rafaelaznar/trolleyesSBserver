@@ -35,7 +35,7 @@ public class CompraController {
         if (oCompraRepository.existsById(id)){
             return new ResponseEntity<CompraEntity>(oCompraRepository.getOne(id), HttpStatus.OK);
         }else{        
-            return new ResponseEntity<CompraEntity>(oCompraRepository.getOne(id), HttpStatus.OK);
+            return new ResponseEntity<CompraEntity>(oCompraRepository.getOne(id), HttpStatus.NOT_FOUND);
         }
     }    
 
