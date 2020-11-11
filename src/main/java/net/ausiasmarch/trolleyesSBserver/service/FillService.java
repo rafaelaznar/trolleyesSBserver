@@ -7,12 +7,14 @@ package net.ausiasmarch.trolleyesSBserver.service;
 
 import java.time.ZoneId;
 import net.ausiasmarch.trolleyesSBserver.entity.CompraEntity;
+import net.ausiasmarch.trolleyesSBserver.entity.FacturaEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.ProductoEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.TipoproductoEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.TipousuarioEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.UsuarioEntity;
 import net.ausiasmarch.trolleyesSBserver.helper.RandomHelper;
 import net.ausiasmarch.trolleyesSBserver.repository.CompraRepository;
+import net.ausiasmarch.trolleyesSBserver.repository.FacturaRepository;
 import net.ausiasmarch.trolleyesSBserver.repository.ProductoRepository;
 import net.ausiasmarch.trolleyesSBserver.repository.TipoproductoRepository;
 import net.ausiasmarch.trolleyesSBserver.repository.TipousuarioRepository;
@@ -37,6 +39,9 @@ public class FillService {
 
     @Autowired
     UsuarioRepository oUsuarioRepository;
+    
+    @Autowired
+    FacturaRepository oFacturaRepository;
 
     public int tipoproductoFill() {
 
@@ -236,4 +241,22 @@ public class FillService {
         oCompraRepository.save(oCompraEntity);
         }
     }
+    
+    public void FacturaFill(Long facturas) {
+        
+        int[]ivas = {4,10,21};
+        
+        for(int i=1; i<=facturas;i++){
+        int iva = ivas[(int) (Math.floor(Math.random() * ((ivas.length - 1) - 0 + 1) + 0))];
+        FacturaEntity oFacturaEntity = new FacturaEntity();
+        oFacturaEntity.setFecha(RandomHelper.getRadomDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+        oFacturaEntity.setIva(iva);
+        oFacturaEntity.setId_usuario(Long.valueOf(RandomHelper.getRandomInt(1, 100)));
+        oFacturaEntity.setPagado(true);
+        oFacturaRepository.save(oFacturaEntity);
+            
+        }
+          
+    }
+    
 }
