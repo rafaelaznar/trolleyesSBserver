@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -59,7 +60,21 @@ public class ProductoController {
 
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestBody ProductoEntity oProductoEntity) {
-        return new ResponseEntity<ProductoEntity>(oProductoRepository.save(oProductoEntity), HttpStatus.OK);
+        if (oProductoEntity.getId() == null) {
+            return new ResponseEntity<ProductoEntity>(oProductoRepository.save(oProductoEntity), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody ProductoEntity oProductoEntity) {
+        oProductoEntity.setId(id);
+        if (oProductoRepository.existsById(id)) {
+            return new ResponseEntity<ProductoEntity>(oProductoRepository.save(oProductoEntity), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+        }
     }
 
     @PostMapping("/fill/{amount}")
