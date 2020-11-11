@@ -35,6 +35,15 @@ public class UsuarioController {
     @Autowired
     FillService oFillService;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
+        if (oUsuarioRepository.existsById(id)) {
+            return new ResponseEntity<UsuarioEntity>(oUsuarioRepository.getOne(id), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<UsuarioEntity>(oUsuarioRepository.getOne(id), HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/all")
     public ResponseEntity<?> get() {
         if (oUsuarioRepository.count() <= 1000) {
