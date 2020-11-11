@@ -58,9 +58,13 @@ public class UsuarioController {
 
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestBody UsuarioEntity oUsuarioEntity) {
+        if (oUsuarioEntity.getId() == null) {
         return new ResponseEntity<UsuarioEntity>(oUsuarioRepository.save(oUsuarioEntity), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+        }
     }
-
+        
     @GetMapping("/count")
     public ResponseEntity<?> count() {
         return new ResponseEntity<Long>(oUsuarioRepository.count(), HttpStatus.OK);
