@@ -32,7 +32,7 @@ public class SessionController {
 
     @PostMapping("/")
     public ResponseEntity<?> login(@RequestBody UsuarioBean oUsuarioBean) {
-        if (oUsuarioBean.getLogin().equalsIgnoreCase("rafa")) {
+        if (oUsuarioBean.getLogin().equalsIgnoreCase("rafael")) {
             if (oUsuarioBean.getPassword().equalsIgnoreCase("79063e8037fff16d297a1fe65136f1251126cddb2cc9870ecf8d653835538e85")) {
                 UsuarioEntity oSessionUsuarioEntity = new UsuarioEntity();
                 oSessionUsuarioEntity.setLogin(oUsuarioBean.getLogin());
