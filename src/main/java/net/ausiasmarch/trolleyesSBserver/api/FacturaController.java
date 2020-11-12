@@ -52,8 +52,12 @@ public class FacturaController {
 
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestBody FacturaEntity oFacturaEntity) {
-        return new ResponseEntity<FacturaEntity>(oFacturaRepository.save(oFacturaEntity), HttpStatus.OK);
 
+        if (oFacturaEntity.getId() == null) {
+            return new ResponseEntity<FacturaEntity>(oFacturaRepository.save(oFacturaEntity), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+        }        
     }
 
     @DeleteMapping("/{id}")
@@ -70,6 +74,7 @@ public class FacturaController {
     public ResponseEntity<?> count() {
         return new ResponseEntity<Long>(oFacturaRepository.count(), HttpStatus.OK);
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody FacturaEntity oFacturaEntity) {
