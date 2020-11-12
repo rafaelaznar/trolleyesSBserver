@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -72,6 +73,16 @@ public class CompraController {
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestBody CompraEntity oCompraEntity) {
         if (oCompraEntity.getId() == null) {
+            return new ResponseEntity<CompraEntity>(oCompraRepository.save(oCompraEntity), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+        }
+    }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody CompraEntity oCompraEntity) {
+        oCompraEntity.setId(id);
+        if (oCompraRepository.existsById(id)) {
             return new ResponseEntity<CompraEntity>(oCompraRepository.save(oCompraEntity), HttpStatus.OK);
         } else {
             return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
