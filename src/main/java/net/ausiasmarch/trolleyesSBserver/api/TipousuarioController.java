@@ -78,7 +78,11 @@ public class TipousuarioController {
 
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestBody TipousuarioEntity oTipousuarioEntity) {
-        return new ResponseEntity<TipousuarioEntity>(oTipousuarioRepository.save(oTipousuarioEntity), HttpStatus.OK);
+        if (oTipousuarioEntity.getId() == null) {
+            return new ResponseEntity<TipousuarioEntity>(oTipousuarioRepository.save(oTipousuarioEntity), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+        }
     }
 
     @PutMapping("/{id}")
