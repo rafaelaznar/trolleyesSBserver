@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -84,11 +85,22 @@ public class TipoproductoController {
             return new ResponseEntity<Long>(0L, HttpStatus.OK);
         }
     }
-    
-     @GetMapping("/page")
+
+    @GetMapping("/page")
     public ResponseEntity<?> getPage(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable) {
-        
-        Page<TipoproductoEntity> oPage= oTipoproductoRepository.findAll(oPageable);            
-        return new ResponseEntity<Page<TipoproductoEntity>>(oPage, HttpStatus.OK);        
+
+        Page<TipoproductoEntity> oPage = oTipoproductoRepository.findAll(oPageable);
+        return new ResponseEntity<Page<TipoproductoEntity>>(oPage, HttpStatus.OK);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody TipoproductoEntity oTipoproductoEntity) {
+        oTipoproductoEntity.setId(id);
+        if (oTipoproductoRepository.existsById(id)) {
+            return new ResponseEntity<TipoproductoEntity>(oTipoproductoRepository.save(oTipoproductoEntity), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+        }
+    }
+
 }
