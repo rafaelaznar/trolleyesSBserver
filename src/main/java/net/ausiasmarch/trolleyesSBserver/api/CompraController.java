@@ -32,12 +32,12 @@ public class CompraController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
-        if (oCompraRepository.existsById(id)){
+        if (oCompraRepository.existsById(id)) {
             return new ResponseEntity<CompraEntity>(oCompraRepository.getOne(id), HttpStatus.OK);
-        }else{        
+        } else {
             return new ResponseEntity<CompraEntity>(oCompraRepository.getOne(id), HttpStatus.NOT_FOUND);
         }
-    }    
+    }
 
     @GetMapping("/all")
     public ResponseEntity<?> all() {
@@ -71,9 +71,13 @@ public class CompraController {
 
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestBody CompraEntity oCompraEntity) {
-        return new ResponseEntity<CompraEntity>(oCompraRepository.save(oCompraEntity), HttpStatus.OK);
+        if (oCompraEntity.getId() == null) {
+            return new ResponseEntity<CompraEntity>(oCompraRepository.save(oCompraEntity), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+        }
     }
-    
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         oCompraRepository.deleteById(id);
