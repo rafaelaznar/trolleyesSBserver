@@ -52,8 +52,8 @@ public class FacturaController {
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestBody FacturaEntity oFacturaEntity) {
         if (oFacturaEntity.getId() == null) {
-        return new ResponseEntity<FacturaEntity>(oFacturaRepository.save(oFacturaEntity), HttpStatus.OK);
-        }else {
+            return new ResponseEntity<FacturaEntity>(oFacturaRepository.save(oFacturaEntity), HttpStatus.OK);
+        } else {
             return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
         }
 
