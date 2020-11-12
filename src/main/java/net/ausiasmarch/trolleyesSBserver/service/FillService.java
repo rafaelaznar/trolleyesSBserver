@@ -213,8 +213,8 @@ public class FillService {
             oUsuarioEntity.setNombre(nombre);
             oUsuarioEntity.setApellido1(apellido1);
             oUsuarioEntity.setApellido2(apellido2);
-            //Maybe esta bien
-            oUsuarioEntity.setLogin(nombre.substring(0, 4) + apellido1.substring(0, 3) + apellido2.substring(0, 3) + String.valueOf(RandomHelper.getRandomInt(1, 999)));
+            //Maybe esta bien            
+            oUsuarioEntity.setLogin(nombre.substring(0, 2).toLowerCase() + apellido1.substring(0, 2).toLowerCase() + apellido2.substring(0, 2).toLowerCase() + String.valueOf(RandomHelper.getRandomInt(1, 10)));
             oUsuarioEntity.setPassword("da8ab09ab4889c6208116a675cad0b13e335943bd7fc418782d054b32fdfba04");
             oUsuarioEntity.setEmail(nombre + apellido1.charAt(0) + "@ausiasmarch.net");
             oUsuarioEntity.setDescuento(0);
