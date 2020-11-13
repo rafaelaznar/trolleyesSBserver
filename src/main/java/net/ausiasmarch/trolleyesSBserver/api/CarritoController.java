@@ -59,8 +59,11 @@ public class CarritoController {
 
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestBody CarritoEntity oCarritoEntity) {
-        return new ResponseEntity<CarritoEntity>(oCarritoRepository.save(oCarritoEntity), HttpStatus.OK);
-
+        if (oCarritoEntity.getId() == null) {
+            return new ResponseEntity<CarritoEntity>(oCarritoRepository.save(oCarritoEntity), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+        }
     }
     
     @DeleteMapping("/{id}")
