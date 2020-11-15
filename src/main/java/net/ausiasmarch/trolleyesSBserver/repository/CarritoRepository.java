@@ -11,7 +11,7 @@
  * Database at:               https://github.com/rafaelaznar/trolleyesSBserver
  * Client at:                 https://github.com/rafaelaznar/TrolleyesAngularJSClient
  *
- * ADISAN is distributed under the MIT License (MIT)
+ * TROLLEYES is distributed under the MIT License (MIT)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
