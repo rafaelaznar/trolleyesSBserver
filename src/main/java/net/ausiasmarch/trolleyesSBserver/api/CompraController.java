@@ -1,8 +1,39 @@
+/*
+ * Copyright (c) 2020
+ *
+ * by Rafael Angel Aznar Aparici (rafaaznar at gmail dot com) & 2020 DAW students
+ * 
+ * TROLLEYES: Free Open Source Shopping Site
+ *
+ *
+ * Sources at:                https://github.com/rafaelaznar/trolleyesSBserver                            
+ * Database at:               https://github.com/rafaelaznar/trolleyesSBserver
+ * Client at:                 https://github.com/rafaelaznar/TrolleyesAngularJSClient
+ *
+ * ADISAN is distributed under the MIT License (MIT)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package net.ausiasmarch.trolleyesSBserver.api;
 
 import java.util.List;
 import javax.servlet.http.HttpSession;
-import net.ausiasmarch.trolleyesSBserver.bean.ResponseBean;
 import net.ausiasmarch.trolleyesSBserver.entity.CompraEntity;
 import net.ausiasmarch.trolleyesSBserver.repository.CompraRepository;
 import net.ausiasmarch.trolleyesSBserver.service.FillService;
@@ -45,10 +76,7 @@ public class CompraController {
         if (oCompraRepository.count() <= 1000) {
             return new ResponseEntity<List<CompraEntity>>(oCompraRepository.findAll(), HttpStatus.OK);
         } else {
-            ResponseBean oSsesionBean = new ResponseBean();
-            oSsesionBean.setMessage("ERROR: TOO MUCH REGISTRIES");
-            oSsesionBean.setStatus(500);
-            return new ResponseEntity<ResponseBean>(oSsesionBean, HttpStatus.OK);
+            return new ResponseEntity<>(null, HttpStatus.PAYLOAD_TOO_LARGE);
         }
     }
 
@@ -57,17 +85,9 @@ public class CompraController {
         return new ResponseEntity<Long>(oCompraRepository.count(), HttpStatus.OK);
     }
 
-    @PostMapping("/fill/{compras}")
-    public ResponseEntity<?> fill(@PathVariable(value = "compras") Long compras) {
-        Long countInicio = oCompraRepository.count();
-        oFillService.CompraFill(compras);
-        Long countFinal = oCompraRepository.count();
-        Long diferencia = countFinal - countInicio;
-        if (diferencia <= 0) {
-            return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
-        } else {
-            return new ResponseEntity<Long>(diferencia, HttpStatus.OK);
-        }
+    @PostMapping("/fill/{amount}")
+    public ResponseEntity<?> fill(@PathVariable(value = "amount") Long amount) {
+        return new ResponseEntity<Long>(oFillService.compraFill(amount), HttpStatus.OK);
     }
 
     @PostMapping("/")
