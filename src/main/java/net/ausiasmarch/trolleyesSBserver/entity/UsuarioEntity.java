@@ -35,11 +35,15 @@ package net.ausiasmarch.trolleyesSBserver.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -58,11 +62,17 @@ public class UsuarioEntity implements Serializable {
     private String apellido1;
     private String apellido2;
     private String login;
+    
     @JsonIgnore
     private String password;
+    
     private String email;
     private Integer descuento;
-    private Long id_tipousuario;
+    
+    @ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.REFRESH})
+    @JoinColumn(name="id_tipousuario")
+    private TipousuarioEntity tipousuario;
+    
     @JsonIgnore
     private String token;
     @JsonIgnore
@@ -70,6 +80,13 @@ public class UsuarioEntity implements Serializable {
     @JsonIgnore
     private boolean activo;
 
+    public UsuarioEntity() {
+    }
+
+    public UsuarioEntity(Long id) {
+        this.id = id;
+    }
+    
     public Long getId() {
         return id;
     }
@@ -142,14 +159,6 @@ public class UsuarioEntity implements Serializable {
         this.descuento = descuento;
     }
 
-    public Long getId_tipousuario() {
-        return id_tipousuario;
-    }
-
-    public void setId_tipousuario(Long id_tipousuario) {
-        this.id_tipousuario = id_tipousuario;
-    }
-
     public String getToken() {
         return token;
     }
@@ -173,4 +182,13 @@ public class UsuarioEntity implements Serializable {
     public void setActivo(boolean activo) {
         this.activo = activo;
     }
+
+    public TipousuarioEntity getTipousuario() {
+        return tipousuario;
+    }
+
+    public void setTipousuario(TipousuarioEntity tipousuario) {
+        this.tipousuario = tipousuario;
+    }
+
 }

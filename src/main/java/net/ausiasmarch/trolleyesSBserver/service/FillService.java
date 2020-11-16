@@ -374,7 +374,9 @@ public class FillService {
             oUsuarioEntity.setPassword("da8ab09ab4889c6208116a675cad0b13e335943bd7fc418782d054b32fdfba04");
             oUsuarioEntity.setEmail(nombre + apellido1.charAt(0) + "@ausiasmarch.net");
             oUsuarioEntity.setDescuento(0);
-            oUsuarioEntity.setId_tipousuario(2L);
+            TipousuarioEntity oTipousuarioEntity = new TipousuarioEntity();
+            oTipousuarioEntity.setId(2L);
+            oUsuarioEntity.setTipousuario(oTipousuarioEntity);
             oUsuarioEntity.setToken("");
             oUsuarioEntity.setValidado(true);
             oUsuarioEntity.setActivo(true);
