@@ -91,7 +91,12 @@ public class TipoproductoController {
 
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestBody TipoproductoEntity oTipoproductoEntity) {
-        return new ResponseEntity<TipoproductoEntity>(oTipoproductoRepository.save(oTipoproductoEntity), HttpStatus.OK);
+        if (oTipoproductoEntity.getId() == null) {
+            return new ResponseEntity<TipoproductoEntity>(oTipoproductoRepository.save(oTipoproductoEntity), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+        }
+        
     }
 
     @PostMapping("/fill/{amount}")
