@@ -35,17 +35,23 @@ package net.ausiasmarch.trolleyesSBserver.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "compra")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class CompraEntity implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -56,9 +62,18 @@ public class CompraEntity implements Serializable {
     private LocalDateTime fecha;
     private Integer descuento_usuario;
     private Integer descuento_producto;
-    private Long id_producto;
-    private Long id_factura;
+    private Long id_producto; 
+    @ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.REFRESH})
+    @JoinColumn(name="id_factura")
+    private FacturaEntity factura;
 
+    public CompraEntity() {
+    }
+    
+    public CompraEntity(Long id) {
+        this.id = id;
+    }
+    
     public Long getId() {
         return id;
     }
@@ -115,13 +130,13 @@ public class CompraEntity implements Serializable {
         this.id_producto = id_producto;
     }
 
-    public Long getId_factura() {
-        return id_factura;
+    public FacturaEntity getFactura() {
+        return factura;
     }
 
-    public void setId_factura(Long id_factura) {
-        this.id_factura = id_factura;
+    public void setFactura(FacturaEntity factura) {
+        this.factura = factura;
     }
-    
+
     
 }

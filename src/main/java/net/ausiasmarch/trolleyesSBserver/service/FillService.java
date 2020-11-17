@@ -395,8 +395,10 @@ public class FillService {
             oCompraEntity.setFecha(RandomHelper.getRadomDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
             oCompraEntity.setDescuento_usuario(RandomHelper.getRandomInt(0, 2));
             oCompraEntity.setDescuento_producto(RandomHelper.getRandomInt(0, 2));
-            oCompraEntity.setId_factura(Long.valueOf(RandomHelper.getRandomInt(1, 100)));
             oCompraEntity.setId_producto(Long.valueOf(i));
+            FacturaEntity oFacturaEntity = new FacturaEntity();
+            oFacturaEntity.setId(cantidad);
+            oCompraEntity.setFactura(oFacturaEntity);
             oCompraRepository.save(oCompraEntity);
         }
         return cantidad;
