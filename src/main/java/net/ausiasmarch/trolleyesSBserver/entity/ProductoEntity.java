@@ -34,11 +34,16 @@ package net.ausiasmarch.trolleyesSBserver.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -59,6 +64,16 @@ public class ProductoEntity implements Serializable {
     private String imagen;
     private Integer descuento;
     private Long id_tipoproducto;
+    
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="producto", cascade={CascadeType.REFRESH})
+    private List<CarritoEntity> carritos = new ArrayList<>();
+    
+    public ProductoEntity(){
+    }
+    
+    public ProductoEntity(Long id){
+        this.id = id;
+    }
 
     public Long getId() {
         return id;
@@ -123,7 +138,11 @@ public class ProductoEntity implements Serializable {
     public void setId_tipoproducto(Long id_tipoproducto) {
         this.id_tipoproducto = id_tipoproducto;
     }
-
-
+    
+    @Override
+    public String toString(){
+        return "Producto [id=" + id + ",codigo="+codigo+",nombre="+nombre+",existencias="+existencias+",precio="+precio+",imagen="+imagen+",descuento"+descuento+",id_tipoproducto="+id_tipoproducto+"]";
+    }
+    
 
 }
