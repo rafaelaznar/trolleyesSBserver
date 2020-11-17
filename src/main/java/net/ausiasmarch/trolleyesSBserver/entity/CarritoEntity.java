@@ -34,11 +34,15 @@ package net.ausiasmarch.trolleyesSBserver.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -52,7 +56,10 @@ public class CarritoEntity implements Serializable {
     private Integer cantidad;
     private Double precio;
     private Long id_producto;
-    private Long id_usuario;
+    
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
+    @JoinColumn(name = "id_usuario")
+    private UsuarioEntity id_usuario;
    
     /**
      * @return the id
@@ -110,17 +117,11 @@ public class CarritoEntity implements Serializable {
         this.id_producto = id_producto;
     }
 
-    /**
-     * @return the id_usuario
-     */
-    public Long getId_usuario() {
+    public UsuarioEntity getId_usuario() {
         return id_usuario;
     }
 
-    /**
-     * @param id_usuario the id_usuario to set
-     */
-    public void setId_usuario(Long id_usuario) {
+    public void setId_usuario(UsuarioEntity id_usuario) {
         this.id_usuario = id_usuario;
     }
 
