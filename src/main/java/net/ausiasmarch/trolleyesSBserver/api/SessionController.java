@@ -35,6 +35,7 @@ package net.ausiasmarch.trolleyesSBserver.api;
 import net.ausiasmarch.trolleyesSBserver.bean.UsuarioBean;
 import javax.servlet.http.HttpSession;
 import net.ausiasmarch.trolleyesSBserver.entity.UsuarioEntity;
+import net.ausiasmarch.trolleyesSBserver.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +52,10 @@ public class SessionController {
 
     @Autowired
     HttpSession oHttpSession;
-   
+
+    @Autowired
+    UsuarioRepository oUsuarioRepository;
+
     @GetMapping("/")
     public ResponseEntity<?> check() {
         UsuarioEntity oSessionUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
@@ -64,15 +68,10 @@ public class SessionController {
 
     @PostMapping("/")
     public ResponseEntity<?> login(@RequestBody UsuarioBean oUsuarioBean) {
-        if (oUsuarioBean.getLogin().equalsIgnoreCase("rafael")) {
-            if (oUsuarioBean.getPassword().equalsIgnoreCase("79063e8037fff16d297a1fe65136f1251126cddb2cc9870ecf8d653835538e85")) {
-                UsuarioEntity oSessionUsuarioEntity = new UsuarioEntity();
-                oSessionUsuarioEntity.setLogin(oUsuarioBean.getLogin());
-                oHttpSession.setAttribute("usuario", oSessionUsuarioEntity);
-                return new ResponseEntity<UsuarioEntity>(oSessionUsuarioEntity, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-            }
+        UsuarioEntity oUsuarioEntity = oUsuarioRepository.findByLoginAndPassword(oUsuarioBean.getLogin(), oUsuarioBean.getPassword().toLowerCase());
+        if (oUsuarioEntity != null) {
+            oHttpSession.setAttribute("usuario", oUsuarioEntity);            
+            return new ResponseEntity<UsuarioEntity>(oUsuarioEntity, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
@@ -81,7 +80,7 @@ public class SessionController {
     @DeleteMapping("/")
     public ResponseEntity<?> logout() {
         oHttpSession.invalidate();
-        return new ResponseEntity<>(null, HttpStatus.OK);        
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
 }
