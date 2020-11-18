@@ -35,11 +35,15 @@ package net.ausiasmarch.trolleyesSBserver.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -56,8 +60,19 @@ public class CompraEntity implements Serializable {
     private LocalDateTime fecha;
     private Integer descuento_usuario;
     private Integer descuento_producto;
-    private Long id_producto;
+    
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
+    @JoinColumn(name = "id_producto")
+    private ProductoEntity productos;
+    
     private Long id_factura;
+    
+    public CompraEntity() {
+    }
+
+    public CompraEntity(Long id) {
+        this.id = id;
+    }
 
     public Long getId() {
         return id;
@@ -107,12 +122,12 @@ public class CompraEntity implements Serializable {
         this.descuento_producto = descuento_producto;
     }
 
-    public Long getId_producto() {
-        return id_producto;
+    public ProductoEntity getProducto() {
+        return productos;
     }
 
-    public void setId_producto(Long id_producto) {
-        this.id_producto = id_producto;
+    public void setProducto(ProductoEntity producto) {
+        this.productos = producto;
     }
 
     public Long getId_factura() {
