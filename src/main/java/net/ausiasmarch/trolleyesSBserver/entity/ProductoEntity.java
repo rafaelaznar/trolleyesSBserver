@@ -64,8 +64,8 @@ public class ProductoEntity implements Serializable {
     private String imagen;
     private Integer descuento;
     private Long id_tipoproducto;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "productos", cascade = {CascadeType.REFRESH})
-    private List<ProductoEntity> productos = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "producto", cascade = {CascadeType.REFRESH})
+    private List<CompraEntity> compras = new ArrayList<>();
     
     public ProductoEntity() {
     }
@@ -142,8 +142,8 @@ public class ProductoEntity implements Serializable {
         return "ProductoEntity [id=" + id + ", codigo="+codigo+", nombre=" + nombre +", existencias=" + existencias +", precio=" + precio +", imagen=" + imagen +", descuento=" + descuento +", id_tipoproducto=" + id_tipoproducto + "]";
     }
     
-    public int getProducto() {
-        return productos.size();
+    public int getCompras() {
+        return compras.size();
     }
 
 }
