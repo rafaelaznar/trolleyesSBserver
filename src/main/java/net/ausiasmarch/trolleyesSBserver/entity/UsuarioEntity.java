@@ -65,25 +65,24 @@ public class UsuarioEntity implements Serializable {
     private String apellido1;
     private String apellido2;
     private String login;
-    
+
     @JsonIgnore
     private String password;
-    
+
     private String email;
     private Integer descuento;
-    
-    @ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.REFRESH})
-    @JoinColumn(name="id_tipousuario")
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
+    @JoinColumn(name = "id_tipousuario")
     private TipousuarioEntity tipousuario;
-    
+
     @JsonIgnore
     private String token;
     @JsonIgnore
     private boolean validado;
     @JsonIgnore
     private boolean activo;
-    
-    
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "id_usuario", cascade = {CascadeType.REFRESH})
     private List<FacturaEntity> factura = new ArrayList<>();
 
@@ -93,7 +92,7 @@ public class UsuarioEntity implements Serializable {
     public UsuarioEntity(Long id) {
         this.id = id;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -197,9 +196,10 @@ public class UsuarioEntity implements Serializable {
     public void setTipousuario(TipousuarioEntity tipousuario) {
         this.tipousuario = tipousuario;
     }
+
     @Override
-    public String toString(){
-        return "Usuario [id=" + id + ",dni="+dni+",nombre="+nombre+",apellido1="+apellido1+",login="+login+
-                ",email="+email+",descuento="+descuento+"]";
+    public String toString() {
+        return "Usuario [id=" + id + ",dni=" + dni + ",nombre=" + nombre + ",apellido1=" + apellido1 + ",login=" + login
+                + ",email=" + email + ",descuento=" + descuento + "]";
     }
 }
