@@ -63,7 +63,7 @@ public class CompraEntity implements Serializable {
     
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "id_producto")
-    private ProductoEntity productos;
+    private ProductoEntity producto;
     
     private Long id_factura;
     
