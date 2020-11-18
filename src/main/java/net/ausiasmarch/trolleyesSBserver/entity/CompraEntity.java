@@ -123,11 +123,11 @@ public class CompraEntity implements Serializable {
     }
 
     public ProductoEntity getProducto() {
-        return productos;
+        return producto;
     }
 
     public void setProducto(ProductoEntity producto) {
-        this.productos = producto;
+        this.producto = producto;
     }
 
     public Long getId_factura() {
