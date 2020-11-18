@@ -411,7 +411,9 @@ public class FillService {
             FacturaEntity oFacturaEntity = new FacturaEntity();
             oFacturaEntity.setFecha(RandomHelper.getRadomDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
             oFacturaEntity.setIva(iva);
-            oFacturaEntity.setId_usuario(Long.valueOf(RandomHelper.getRandomInt(1, 100)));
+            UsuarioEntity oUsuarioEntity = new UsuarioEntity();
+            oUsuarioEntity.setId(cantidad);
+            oFacturaEntity.setId_usuario(oUsuarioEntity);
             oFacturaEntity.setPagado(true);
             oFacturaRepository.save(oFacturaEntity);
 
