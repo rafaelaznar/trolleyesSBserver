@@ -54,8 +54,10 @@ public class CompraEntity implements Serializable {
     private Long id;
     private Integer cantidad;
     private Double precio;
+    
     @JsonFormat(pattern="dd/MM/yyyy HH:mm")
     private LocalDateTime fecha;
+    
     private Integer descuento_usuario;
     private Integer descuento_producto;
     private Long id_producto;

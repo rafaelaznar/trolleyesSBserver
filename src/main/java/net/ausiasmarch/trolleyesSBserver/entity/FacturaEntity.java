@@ -55,8 +55,10 @@ public class FacturaEntity implements Serializable{
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="id")
     private Long id;
+    
     @JsonFormat(pattern="dd/MM/yyyy HH:mm")
     private LocalDateTime fecha;
+    
     private Integer iva;
     private Long id_usuario;
     private Boolean pagado;
