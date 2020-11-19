@@ -32,6 +32,7 @@
  */
 package net.ausiasmarch.trolleyesSBserver.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import java.io.Serializable;
@@ -54,6 +55,7 @@ public class FacturaEntity implements Serializable{
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="id")
     private Long id;
+    @JsonFormat(pattern="dd/MM/yyyy HH:mm")
     private LocalDateTime fecha;
     private Integer iva;
     private Long id_usuario;
