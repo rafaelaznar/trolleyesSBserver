@@ -48,14 +48,14 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "producto")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ProductoEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
     private String codigo;
     private String nombre;
@@ -64,15 +64,20 @@ public class ProductoEntity implements Serializable {
     private String imagen;
     private Integer descuento;
     private Long id_tipoproducto;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "producto", cascade = {CascadeType.REFRESH})
     private List<CompraEntity> compras = new ArrayList<>();
-    
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "producto", cascade = {CascadeType.REFRESH})
+    private List<CarritoEntity> carritos = new ArrayList<>();
+
     public ProductoEntity() {
     }
 
     public ProductoEntity(Long id) {
         this.id = id;
     }
+
     public Long getId() {
         return id;
     }
@@ -138,12 +143,15 @@ public class ProductoEntity implements Serializable {
     }
 
     @Override
-    public String toString(){
-        return "ProductoEntity [id=" + id + ", codigo="+codigo+", nombre=" + nombre +", existencias=" + existencias +", precio=" + precio +", imagen=" + imagen +", descuento=" + descuento +", id_tipoproducto=" + id_tipoproducto + "]";
+    public String toString() {
+        return "ProductoEntity [id=" + id + ", codigo=" + codigo + ", nombre=" + nombre + ", existencias=" + existencias + ", precio=" + precio + ", imagen=" + imagen + ", descuento=" + descuento + ", id_tipoproducto=" + id_tipoproducto + "]";
     }
-    
+
     public int getCompras() {
         return compras.size();
     }
 
+    public int getCarritos() {
+        return carritos.size();
+    }
 }
