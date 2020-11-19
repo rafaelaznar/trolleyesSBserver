@@ -33,6 +33,7 @@
 package net.ausiasmarch.trolleyesSBserver.service;
 
 import java.time.ZoneId;
+import java.util.Optional;
 import net.ausiasmarch.trolleyesSBserver.entity.CompraEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.FacturaEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.ProductoEntity;
@@ -396,7 +397,9 @@ public class FillService {
             oCompraEntity.setDescuento_usuario(RandomHelper.getRandomInt(0, 2));
             oCompraEntity.setDescuento_producto(RandomHelper.getRandomInt(0, 2));
             oCompraEntity.setId_factura(Long.valueOf(RandomHelper.getRandomInt(1, 100)));
-            oCompraEntity.setId_producto(Long.valueOf(i));
+            Optional<ProductoEntity> optinalEntity = oProductoRepository.findById(Long.valueOf(RandomHelper.getRandomInt(1, 100)));
+            ProductoEntity oProductoEntity = optinalEntity.get();
+            oCompraEntity.setProducto(oProductoEntity);
             oCompraRepository.save(oCompraEntity);
         }
         return cantidad;
