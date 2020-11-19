@@ -32,6 +32,7 @@
  */
 package net.ausiasmarch.trolleyesSBserver.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -53,6 +54,7 @@ public class CompraEntity implements Serializable {
     private Long id;
     private Integer cantidad;
     private Double precio;
+    @JsonFormat(pattern="dd/MM/yyyy HH:mm")
     private LocalDateTime fecha;
     private Integer descuento_usuario;
     private Integer descuento_producto;
