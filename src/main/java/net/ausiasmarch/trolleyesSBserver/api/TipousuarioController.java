@@ -107,22 +107,23 @@ public class TipousuarioController {
 
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestBody TipousuarioEntity oTipousuarioEntity) {
-       
+
         UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
         if (oUsuarioEntity == null) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
             if (oUsuarioEntity.getTipousuario().getId() == 1 || oUsuarioEntity.getTipousuario().getId() == 2) { //administrador o usuario serán rechazados
                 return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            } else {
+                if (oTipousuarioEntity.getId() == null) {
+                    return new ResponseEntity<TipousuarioEntity>(oTipousuarioRepository.save(oTipousuarioEntity), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+                }
             }
 
         }
-         
-        if (oTipousuarioEntity.getId() == null) {
-            return new ResponseEntity<TipousuarioEntity>(oTipousuarioRepository.save(oTipousuarioEntity), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
-        }
+
     }
 
     @PutMapping("/{id}")
