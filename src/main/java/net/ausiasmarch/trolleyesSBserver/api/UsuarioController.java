@@ -142,8 +142,19 @@ public class UsuarioController {
     @GetMapping("/page")
     public ResponseEntity<?> getPage(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable) {
 
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        
         Page<UsuarioEntity> oPage = oUsuarioRepository.findAll(oPageable);
-        return new ResponseEntity<Page<UsuarioEntity>>(oPage, HttpStatus.OK);
-    }
 
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        } else {
+            if (oUsuarioEntity.getTipousuario().getId() == 1) { //administrador
+                return new ResponseEntity<Page<UsuarioEntity>>(oPage, HttpStatus.OK);
+            } else {  //cliente
+                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }
+            
+        }
+    }
 }
