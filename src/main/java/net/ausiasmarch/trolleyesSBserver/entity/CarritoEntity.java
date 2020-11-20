@@ -59,7 +59,7 @@ public class CarritoEntity implements Serializable {
     
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "id_usuario")
-    private UsuarioEntity id_usuario;
+    private UsuarioEntity usuario;
    
     /**
      * @return the id
@@ -117,13 +117,14 @@ public class CarritoEntity implements Serializable {
         this.id_producto = id_producto;
     }
 
-    public UsuarioEntity getId_usuario() {
-        return id_usuario;
+    public UsuarioEntity getUsuario() {
+        return usuario;
     }
 
-    public void setId_usuario(UsuarioEntity id_usuario) {
-        this.id_usuario = id_usuario;
+    public void setUsuario(UsuarioEntity usuario) {
+        this.usuario = usuario;
     }
+
 
   }
 

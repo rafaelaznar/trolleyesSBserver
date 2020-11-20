@@ -83,10 +83,10 @@ public class UsuarioEntity implements Serializable {
     @JsonIgnore
     private boolean activo;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id_usuario", cascade = {CascadeType.REFRESH})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario", cascade = {CascadeType.REFRESH})
     private List<FacturaEntity> facturas = new ArrayList<>();
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id_usuario", cascade = {CascadeType.REFRESH})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario", cascade = {CascadeType.REFRESH})
     private List<CarritoEntity> carritos = new ArrayList<>();
 
     public UsuarioEntity() {

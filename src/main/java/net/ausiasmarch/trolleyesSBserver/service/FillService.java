@@ -416,7 +416,7 @@ public class FillService {
             oFacturaEntity.setIva(iva);
             UsuarioEntity oUsuarioEntity = new UsuarioEntity();
             oUsuarioEntity.setId(cantidad);
-            oFacturaEntity.setId_usuario(oUsuarioEntity);
+            oFacturaEntity.setUsuario(oUsuarioEntity);
             oFacturaEntity.setPagado(true);
             oFacturaRepository.save(oFacturaEntity);
 

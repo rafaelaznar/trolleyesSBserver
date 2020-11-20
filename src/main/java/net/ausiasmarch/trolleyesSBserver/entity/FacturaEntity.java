@@ -68,7 +68,7 @@ public class FacturaEntity implements Serializable{
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "id_usuario")
-    private UsuarioEntity id_usuario;
+    private UsuarioEntity usuario;
     
     public Long getId() {
         return id;
@@ -94,14 +94,6 @@ public class FacturaEntity implements Serializable{
         this.iva = iva;
     }
 
-    public UsuarioEntity getId_usuario() {
-        return id_usuario;
-    }
-
-    public void setId_usuario(UsuarioEntity id_usuario) {
-        this.id_usuario = id_usuario;
-    }
-
     public Boolean getPagado() {
         return pagado;
     }
@@ -109,9 +101,13 @@ public class FacturaEntity implements Serializable{
     public void setPagado(Boolean pagado) {
         this.pagado = pagado;
     }
-    
-    
-    
-    
+
+    public UsuarioEntity getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(UsuarioEntity usuario) {
+        this.usuario = usuario;
+    }            
     
 }
