@@ -396,10 +396,12 @@ public class FillService {
             oCompraEntity.setFecha(RandomHelper.getRadomDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
             oCompraEntity.setDescuento_usuario(RandomHelper.getRandomInt(0, 2));
             oCompraEntity.setDescuento_producto(RandomHelper.getRandomInt(0, 2));
+            //ojo
             oCompraEntity.setId_factura(Long.valueOf(RandomHelper.getRandomInt(1, 100)));
             Optional<ProductoEntity> optinalEntity = oProductoRepository.findById(Long.valueOf(RandomHelper.getRandomInt(1, 100)));
             ProductoEntity oProductoEntity = optinalEntity.get();
             oCompraEntity.setProducto(oProductoEntity);
+            //---
             oCompraRepository.save(oCompraEntity);
         }
         return cantidad;

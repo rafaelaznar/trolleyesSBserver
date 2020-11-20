@@ -52,6 +52,8 @@ import javax.persistence.Table;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class CompraEntity implements Serializable {
     
+    private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="id")
@@ -64,12 +66,14 @@ public class CompraEntity implements Serializable {
     
     private Integer descuento_usuario;
     private Integer descuento_producto;
+  
+    @ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.REFRESH})
+    @JoinColumn(name="id_factura")
+    private FacturaEntity factura;
     
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "id_producto")
     private ProductoEntity producto;
-    
-    private Long id_factura;
     
     public CompraEntity() {
     }
@@ -78,6 +82,13 @@ public class CompraEntity implements Serializable {
         this.id = id;
     }
 
+    public CompraEntity() {
+    }
+    
+    public CompraEntity(Long id) {
+        this.id = id;
+    }
+    
     public Long getId() {
         return id;
     }
@@ -134,13 +145,13 @@ public class CompraEntity implements Serializable {
         this.producto = producto;
     }
 
-    public Long getId_factura() {
-        return id_factura;
+    public FacturaEntity getFactura() {
+        return factura;
     }
 
-    public void setId_factura(Long id_factura) {
-        this.id_factura = id_factura;
+    public void setFactura(FacturaEntity factura) {
+        this.factura = factura;
     }
-    
+
     
 }
