@@ -81,7 +81,7 @@ public class UsuarioController {
                     return new ResponseEntity<UsuarioEntity>(oUsuarioRepository.getOne(id), HttpStatus.NOT_FOUND);
                 }
             } else {  //cliente
-                if (oUsuarioEntity.getId() == id) {  //los datos pedidos por el cliente son sus propios datos?
+                if (id.equals(oUsuarioEntity.getId())) {  //los datos pedidos por el cliente son sus propios datos?
                     return new ResponseEntity<UsuarioEntity>(oUsuarioRepository.getOne(id), HttpStatus.OK);
                 } else {
                     return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
