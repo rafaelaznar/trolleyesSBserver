@@ -59,9 +59,6 @@ public class CarritoEntity implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "id_producto")
     private ProductoEntity producto;
-    private Long id_usuario;
-
-    private Long id_producto;
     
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "id_usuario")

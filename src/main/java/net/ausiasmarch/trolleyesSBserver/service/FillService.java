@@ -328,7 +328,9 @@ public class FillService {
             oProductoEntity.setDescuento(RandomHelper.getRandomInt(0, 3));
             oProductoEntity.setExistencias(RandomHelper.getRandomInt(0, 1000));
             oProductoEntity.setNombre(this.getProducto01p() + this.getProducto02() + this.getProducto03() + this.getProductoLast());
-            oProductoEntity.setId_tipoproducto(Long.valueOf(RandomHelper.getRandomInt(1, 10))); //del 1 al 10
+            Optional<TipoproductoEntity> optionalTipoproductoEntity = oTipoproductoRepository.findById(Long.valueOf(RandomHelper.getRandomInt(1, 100)));
+            TipoproductoEntity oTipoproductoEntity = optionalTipoproductoEntity.get();  
+            oProductoEntity.setTipoproducto(oTipoproductoEntity);                        
             oProductoEntity.setImagen("no-product-image.png");
             oProductoEntity.setPrecio(RandomHelper.getRadomDouble(1, 3000));
             oProductoRepository.save(oProductoEntity);
