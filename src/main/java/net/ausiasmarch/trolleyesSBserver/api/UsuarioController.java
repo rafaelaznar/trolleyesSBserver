@@ -33,6 +33,7 @@
 package net.ausiasmarch.trolleyesSBserver.api;
 
 import java.util.List;
+import java.util.Optional;
 import javax.servlet.http.HttpSession;
 import net.ausiasmarch.trolleyesSBserver.entity.UsuarioEntity;
 import net.ausiasmarch.trolleyesSBserver.repository.UsuarioRepository;
@@ -81,7 +82,7 @@ public class UsuarioController {
                     return new ResponseEntity<UsuarioEntity>(oUsuarioRepository.getOne(id), HttpStatus.NOT_FOUND);
                 }
             } else {  //cliente
-                if (oUsuarioEntity.getId() == id) {  //los datos pedidos por el cliente son sus propios datos?
+                if (id.equals(oUsuarioEntity.getId())) {  //los datos pedidos por el cliente son sus propios datos?
                     return new ResponseEntity<UsuarioEntity>(oUsuarioRepository.getOne(id), HttpStatus.OK);
                 } else {
                     return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
@@ -132,7 +133,12 @@ public class UsuarioController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody UsuarioEntity oUsuarioEntity) {
         oUsuarioEntity.setId(id);
-        if (oUsuarioRepository.existsById(id)) {
+        if (oUsuarioRepository.existsById(id)) {            
+            UsuarioEntity oUsuarioEntity2= oUsuarioRepository.getOne(id);           
+            oUsuarioEntity.setPassword(oUsuarioEntity2.getPassword());
+            oUsuarioEntity.setToken(oUsuarioEntity2.getToken());
+            oUsuarioEntity.setActivo(oUsuarioEntity2.isActivo());
+            oUsuarioEntity.setValidado(oUsuarioEntity2.isValidado());            
             return new ResponseEntity<UsuarioEntity>(oUsuarioRepository.save(oUsuarioEntity), HttpStatus.OK);
         } else {
             return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);

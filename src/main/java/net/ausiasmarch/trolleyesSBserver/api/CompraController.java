@@ -35,7 +35,9 @@ package net.ausiasmarch.trolleyesSBserver.api;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import net.ausiasmarch.trolleyesSBserver.entity.CompraEntity;
+import net.ausiasmarch.trolleyesSBserver.entity.ProductoEntity;
 import net.ausiasmarch.trolleyesSBserver.repository.CompraRepository;
+import net.ausiasmarch.trolleyesSBserver.repository.ProductoRepository;
 import net.ausiasmarch.trolleyesSBserver.service.FillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -59,6 +61,9 @@ public class CompraController {
 
     @Autowired
     HttpSession oHttpSession;
+
+    @Autowired
+    ProductoRepository oProductoRepository;
 
     @Autowired
     CompraRepository oCompraRepository;
@@ -102,7 +107,7 @@ public class CompraController {
             return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
         }
     }
-    
+
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody CompraEntity oCompraEntity) {
         oCompraEntity.setId(id);
@@ -122,11 +127,32 @@ public class CompraController {
             return new ResponseEntity<Long>(0L, HttpStatus.OK);
         }
     }
-    
+
     @GetMapping("/page")
     public ResponseEntity<?> getPage(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable) {
         Page<CompraEntity> oPage = oCompraRepository.findAll(oPageable);
         return new ResponseEntity<Page<CompraEntity>>(oPage, HttpStatus.OK);
+    }
+
+    @GetMapping("/pagexproducto/{id}")
+    public ResponseEntity<?> getPageXProducto(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable, @PathVariable(value = "id") Long id) {
+
+//        Page<CompraEntity> oPage = oCompraRepository.findByCompraXProducto(id, oPageable);
+//        return new ResponseEntity<Page<CompraEntity>>(oPage, HttpStatus.OK);
+
+        if (oProductoRepository.existsById(id)) {
+            ProductoEntity oProductoEntity = oProductoRepository.getOne(id);
+            Page<CompraEntity> oPage = oCompraRepository.findByProducto(oProductoEntity, oPageable);
+            return new ResponseEntity<Page<CompraEntity>>(oPage, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+
+
+
+
+
+
     }
 
 }
