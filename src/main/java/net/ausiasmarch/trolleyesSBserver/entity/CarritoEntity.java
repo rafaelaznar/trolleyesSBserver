@@ -34,11 +34,15 @@ package net.ausiasmarch.trolleyesSBserver.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -51,9 +55,21 @@ public class CarritoEntity implements Serializable {
     private Long id;
     private Integer cantidad;
     private Double precio;
-    private Long id_producto;
-    private Long id_usuario;
+    
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
+    @JoinColumn(name = "id_producto")
+    private ProductoEntity producto;
+    
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
+    @JoinColumn(name = "id_usuario")
+    private UsuarioEntity usuario;
    
+    public CarritoEntity(){
+    }
+    
+    public CarritoEntity(Long id){
+        this.id = id;
+    }
     /**
      * @return the id
      */
@@ -99,30 +115,25 @@ public class CarritoEntity implements Serializable {
     /**
      * @return the id_producto
      */
-    public Long getId_producto() {
-        return id_producto;
+    public ProductoEntity getProducto() {
+        return producto;
     }
 
     /**
      * @param id_producto the id_producto to set
      */
-    public void setId_producto(Long id_producto) {
-        this.id_producto = id_producto;
+    public void setProducto(ProductoEntity producto) {
+        this.producto = producto;
     }
 
-    /**
-     * @return the id_usuario
-     */
-    public Long getId_usuario() {
-        return id_usuario;
+    public UsuarioEntity getUsuario() {
+        return usuario;
     }
 
-    /**
-     * @param id_usuario the id_usuario to set
-     */
-    public void setId_usuario(Long id_usuario) {
-        this.id_usuario = id_usuario;
+    public void setUsuario(UsuarioEntity usuario) {
+        this.usuario = usuario;
     }
+
 
   }
 

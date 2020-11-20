@@ -35,6 +35,7 @@ package net.ausiasmarch.trolleyesSBserver.api;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import net.ausiasmarch.trolleyesSBserver.entity.ProductoEntity;
+import net.ausiasmarch.trolleyesSBserver.entity.UsuarioEntity;
 import net.ausiasmarch.trolleyesSBserver.repository.ProductoRepository;
 import net.ausiasmarch.trolleyesSBserver.service.FillService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,19 +117,32 @@ public class ProductoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
-        oProductoRepository.deleteById(id);
-        if (oProductoRepository.existsById(id)) {
-            return new ResponseEntity<Long>(id, HttpStatus.NOT_MODIFIED);
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
-            return new ResponseEntity<Long>(0L, HttpStatus.OK);
+            if (oUsuarioEntity.getTipousuario().getId() == 1) {
+
+                oProductoRepository.deleteById(id);
+
+                if (oProductoRepository.existsById(id)) {
+                    return new ResponseEntity<Long>(id, HttpStatus.NOT_MODIFIED);
+                } else {
+                    return new ResponseEntity<Long>(0L, HttpStatus.OK);
+                }
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }
         }
     }
 
     @GetMapping("/page")
-    public ResponseEntity<?> getPage(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable) {
-        
-        Page<ProductoEntity> oPage= oProductoRepository.findAll(oPageable);            
-        return new ResponseEntity<Page<ProductoEntity>>(oPage, HttpStatus.OK);        
+    public ResponseEntity<?> getPage(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable
+    ) {
+
+        Page<ProductoEntity> oPage = oProductoRepository.findAll(oPageable);
+        return new ResponseEntity<Page<ProductoEntity>>(oPage, HttpStatus.OK);
     }
 
 }

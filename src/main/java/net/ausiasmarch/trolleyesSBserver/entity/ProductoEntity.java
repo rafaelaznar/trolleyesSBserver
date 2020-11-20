@@ -43,19 +43,21 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "producto")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ProductoEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
     private String codigo;
     private String nombre;
@@ -63,16 +65,24 @@ public class ProductoEntity implements Serializable {
     private Double precio;
     private String imagen;
     private Integer descuento;
-    private Long id_tipoproducto;
+    
+    @ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.REFRESH})
+    @JoinColumn(name="id_tipoproducto")
+    private TipoproductoEntity tipoproducto;       
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "producto", cascade = {CascadeType.REFRESH})
     private List<CompraEntity> compras = new ArrayList<>();
-    
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "producto", cascade = {CascadeType.REFRESH})
+    private List<CarritoEntity> carritos = new ArrayList<>();
+
     public ProductoEntity() {
     }
 
     public ProductoEntity(Long id) {
         this.id = id;
     }
+
     public Long getId() {
         return id;
     }
@@ -129,21 +139,24 @@ public class ProductoEntity implements Serializable {
         this.descuento = descuento;
     }
 
-    public Long getId_tipoproducto() {
-        return id_tipoproducto;
-    }
-
-    public void setId_tipoproducto(Long id_tipoproducto) {
-        this.id_tipoproducto = id_tipoproducto;
-    }
-
     @Override
-    public String toString(){
-        return "ProductoEntity [id=" + id + ", codigo="+codigo+", nombre=" + nombre +", existencias=" + existencias +", precio=" + precio +", imagen=" + imagen +", descuento=" + descuento +", id_tipoproducto=" + id_tipoproducto + "]";
+    public String toString() {
+        return "ProductoEntity [id=" + id + ", codigo=" + codigo + ", nombre=" + nombre + ", existencias=" + existencias + ", precio=" + precio + ", imagen=" + imagen + ", descuento=" + descuento + ", id_tipoproducto=" + tipoproducto.getId() + "]";
     }
-    
+            
     public int getCompras() {
         return compras.size();
     }
 
+    public int getCarritos() {
+        return carritos.size();
+    }
+
+    public TipoproductoEntity getTipoproducto() {
+        return tipoproducto;
+    }
+
+    public void setTipoproducto(TipoproductoEntity tipoproducto) {
+        this.tipoproducto = tipoproducto;
+    }
 }

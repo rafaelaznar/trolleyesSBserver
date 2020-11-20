@@ -134,7 +134,7 @@ public class CompraController {
         return new ResponseEntity<Page<CompraEntity>>(oPage, HttpStatus.OK);
     }
 
-    @GetMapping("/pagexproducto/{id}")
+    @GetMapping("/page/producto/{id}")
     public ResponseEntity<?> getPageXProducto(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable, @PathVariable(value = "id") Long id) {
 
 //        Page<CompraEntity> oPage = oCompraRepository.findByCompraXProducto(id, oPageable);

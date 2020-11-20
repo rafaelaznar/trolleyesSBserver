@@ -35,6 +35,8 @@ package net.ausiasmarch.trolleyesSBserver.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -44,6 +46,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -80,13 +83,19 @@ public class UsuarioEntity implements Serializable {
     @JsonIgnore
     private boolean activo;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario", cascade = {CascadeType.REFRESH})
+    private List<FacturaEntity> facturas = new ArrayList<>();
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario", cascade = {CascadeType.REFRESH})
+    private List<CarritoEntity> carritos = new ArrayList<>();
+
     public UsuarioEntity() {
     }
 
     public UsuarioEntity(Long id) {
         this.id = id;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -191,4 +200,17 @@ public class UsuarioEntity implements Serializable {
         this.tipousuario = tipousuario;
     }
 
+    @Override
+    public String toString() {
+        return "Usuario [id=" + id + ",dni=" + dni + ",nombre=" + nombre + ",apellido1=" + apellido1 + ",login=" + login
+                + ",email=" + email + ",descuento=" + descuento + "]";
+    }
+
+    public int getCarritos() {
+        return carritos.size();
+    }
+
+    public int getFacturas() {
+        return facturas.size();
+    }
 }

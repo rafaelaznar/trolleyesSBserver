@@ -328,7 +328,9 @@ public class FillService {
             oProductoEntity.setDescuento(RandomHelper.getRandomInt(0, 3));
             oProductoEntity.setExistencias(RandomHelper.getRandomInt(0, 1000));
             oProductoEntity.setNombre(this.getProducto01p() + this.getProducto02() + this.getProducto03() + this.getProductoLast());
-            oProductoEntity.setId_tipoproducto(Long.valueOf(RandomHelper.getRandomInt(1, 10))); //del 1 al 10
+            Optional<TipoproductoEntity> optionalTipoproductoEntity = oTipoproductoRepository.findById(Long.valueOf(RandomHelper.getRandomInt(1, 100)));
+            TipoproductoEntity oTipoproductoEntity = optionalTipoproductoEntity.get();  
+            oProductoEntity.setTipoproducto(oTipoproductoEntity);                        
             oProductoEntity.setImagen("no-product-image.png");
             oProductoEntity.setPrecio(RandomHelper.getRadomDouble(1, 3000));
             oProductoRepository.save(oProductoEntity);
@@ -395,10 +397,12 @@ public class FillService {
             oCompraEntity.setPrecio(RandomHelper.getRadomDouble(1, 200));
             oCompraEntity.setFecha(RandomHelper.getRadomDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
             oCompraEntity.setDescuento_usuario(RandomHelper.getRandomInt(0, 2));
-            oCompraEntity.setDescuento_producto(RandomHelper.getRandomInt(0, 2));
-            oCompraEntity.setId_factura(Long.valueOf(RandomHelper.getRandomInt(1, 100)));
-            Optional<ProductoEntity> optinalEntity = oProductoRepository.findById(Long.valueOf(RandomHelper.getRandomInt(1, 100)));
-            ProductoEntity oProductoEntity = optinalEntity.get();
+            oCompraEntity.setDescuento_producto(RandomHelper.getRandomInt(0, 2));            
+            Optional<FacturaEntity> optionalFacturaEntity = oFacturaRepository.findById(Long.valueOf(RandomHelper.getRandomInt(1, 100)));
+            FacturaEntity oFacturaEntity = optionalFacturaEntity.get();  
+            oCompraEntity.setFactura(oFacturaEntity);
+            Optional<ProductoEntity> optionalProductoEntity = oProductoRepository.findById(Long.valueOf(RandomHelper.getRandomInt(1, 100)));
+            ProductoEntity oProductoEntity = optionalProductoEntity.get();
             oCompraEntity.setProducto(oProductoEntity);
             oCompraRepository.save(oCompraEntity);
         }
@@ -413,11 +417,12 @@ public class FillService {
             int iva = ivas[(int) (Math.floor(Math.random() * ((ivas.length - 1) - 0 + 1) + 0))];
             FacturaEntity oFacturaEntity = new FacturaEntity();
             oFacturaEntity.setFecha(RandomHelper.getRadomDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
-            oFacturaEntity.setIva(iva);
-            oFacturaEntity.setId_usuario(Long.valueOf(RandomHelper.getRandomInt(1, 100)));
+            oFacturaEntity.setIva(iva);           
+            Optional<UsuarioEntity> optionalUsuarioEntity = oUsuarioRepository.findById(Long.valueOf(RandomHelper.getRandomInt(1, 100)));
+            UsuarioEntity oUsuarioEntity = optionalUsuarioEntity.get();                          
+            oFacturaEntity.setUsuario(oUsuarioEntity);
             oFacturaEntity.setPagado(true);
             oFacturaRepository.save(oFacturaEntity);
-
         }
         return cantidad;
 
