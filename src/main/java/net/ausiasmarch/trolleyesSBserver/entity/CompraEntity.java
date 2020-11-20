@@ -32,6 +32,7 @@
  */
 package net.ausiasmarch.trolleyesSBserver.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -59,13 +60,27 @@ public class CompraEntity implements Serializable {
     private Long id;
     private Integer cantidad;
     private Double precio;
+    
+    @JsonFormat(pattern="dd/MM/yyyy HH:mm")
     private LocalDateTime fecha;
+    
     private Integer descuento_usuario;
     private Integer descuento_producto;
-    private Long id_producto; 
+  
     @ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.REFRESH})
     @JoinColumn(name="id_factura")
     private FacturaEntity factura;
+    
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
+    @JoinColumn(name = "id_producto")
+    private ProductoEntity producto;
+    
+    public CompraEntity() {
+    }
+
+    public CompraEntity(Long id) {
+        this.id = id;
+    }
 
     public CompraEntity() {
     }
@@ -122,12 +137,12 @@ public class CompraEntity implements Serializable {
         this.descuento_producto = descuento_producto;
     }
 
-    public Long getId_producto() {
-        return id_producto;
+    public ProductoEntity getProducto() {
+        return producto;
     }
 
-    public void setId_producto(Long id_producto) {
-        this.id_producto = id_producto;
+    public void setProducto(ProductoEntity producto) {
+        this.producto = producto;
     }
 
     public FacturaEntity getFactura() {

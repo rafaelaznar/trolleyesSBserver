@@ -32,6 +32,7 @@
  */
 package net.ausiasmarch.trolleyesSBserver.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import java.io.Serializable;
@@ -46,6 +47,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 
@@ -60,9 +63,11 @@ public class FacturaEntity implements Serializable{
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="id")
     private Long id;
+    
+    @JsonFormat(pattern="dd/MM/yyyy HH:mm")
     private LocalDateTime fecha;
+    
     private Integer iva;
-    private Long id_usuario;
     private Boolean pagado;
     
     @OneToMany(fetch=FetchType.LAZY,mappedBy="factura", cascade={CascadeType.REFRESH})
@@ -75,6 +80,10 @@ public class FacturaEntity implements Serializable{
         this.id = id;
     }
  
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
+    @JoinColumn(name = "id_usuario")
+    private UsuarioEntity usuario;
+    
     public Long getId() {
         return id;
     }
@@ -99,12 +108,12 @@ public class FacturaEntity implements Serializable{
         this.iva = iva;
     }
 
-    public Long getId_usuario() {
-        return id_usuario;
+    public UsuarioEntity getUsuario() {
+        return usuario;
     }
 
-    public void setId_usuario(Long id_usuario) {
-        this.id_usuario = id_usuario;
+    public void setUsuario(UsuarioEntity usuario) {
+        this.usuario = usuario;
     }
 
     public Boolean getPagado() {
