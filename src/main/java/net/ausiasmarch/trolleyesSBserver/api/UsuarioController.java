@@ -101,11 +101,20 @@ public class UsuarioController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<?> create(@RequestBody UsuarioEntity oUsuarioEntity) {
-        if (oUsuarioEntity.getId() == null) {
-            return new ResponseEntity<UsuarioEntity>(oUsuarioRepository.save(oUsuarioEntity), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+    public ResponseEntity<?> create(@RequestBody UsuarioEntity oUsuarioEntity) {     
+            
+        if (oUsuarioEntity == null){
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }else{            
+            if(oUsuarioEntity.getTipousuario().getId()==1) {
+                if (oUsuarioEntity.getId() == null) {
+                    return new ResponseEntity<UsuarioEntity>(oUsuarioRepository.save(oUsuarioEntity), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+                } 
+            }else{
+               return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }           
         }
     }
 
