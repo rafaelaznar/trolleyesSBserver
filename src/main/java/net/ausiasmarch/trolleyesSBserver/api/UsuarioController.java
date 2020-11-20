@@ -111,7 +111,23 @@ public class UsuarioController {
 
     @GetMapping("/count")
     public ResponseEntity<?> count() {
-        return new ResponseEntity<Long>(oUsuarioRepository.count(), HttpStatus.OK);
+
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            
+        } else {
+            
+            if (oUsuarioEntity.getTipousuario().getId() == 1) { //administrador
+                
+                return new ResponseEntity<Long>(oUsuarioRepository.count(), HttpStatus.OK);
+
+            } else {  //cliente
+                
+                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }
+        }
     }
 
     @PostMapping("/fill/{amount}")
