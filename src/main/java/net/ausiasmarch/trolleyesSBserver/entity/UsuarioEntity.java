@@ -82,6 +82,9 @@ public class UsuarioEntity implements Serializable {
     private boolean validado;
     @JsonIgnore
     private boolean activo;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id_usuario", cascade = {CascadeType.REFRESH})
+    private List<FacturaEntity> facturas = new ArrayList<>();
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "id_usuario", cascade = {CascadeType.REFRESH})
     private List<CarritoEntity> carritos = new ArrayList<>();
@@ -92,7 +95,7 @@ public class UsuarioEntity implements Serializable {
     public UsuarioEntity(Long id) {
         this.id = id;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -197,7 +200,17 @@ public class UsuarioEntity implements Serializable {
         this.tipousuario = tipousuario;
     }
 
+    @Override
+    public String toString() {
+        return "Usuario [id=" + id + ",dni=" + dni + ",nombre=" + nombre + ",apellido1=" + apellido1 + ",login=" + login
+                + ",email=" + email + ",descuento=" + descuento + "]";
+    }
+
     public int getCarritos() {
         return carritos.size();
+    }
+
+    public int getFacturas() {
+        return facturas.size();
     }
 }
