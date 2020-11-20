@@ -65,17 +65,17 @@ public class UsuarioEntity implements Serializable {
     private String apellido1;
     private String apellido2;
     private String login;
-
+    
     @JsonIgnore
     private String password;
-
+    
     private String email;
     private Integer descuento;
-
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
-    @JoinColumn(name = "id_tipousuario")
+    
+    @ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.REFRESH})
+    @JoinColumn(name="id_tipousuario")
     private TipousuarioEntity tipousuario;
-
+    
     @JsonIgnore
     private String token;
     @JsonIgnore
@@ -84,7 +84,10 @@ public class UsuarioEntity implements Serializable {
     private boolean activo;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "id_usuario", cascade = {CascadeType.REFRESH})
-    private List<FacturaEntity> factura = new ArrayList<>();
+    private List<FacturaEntity> facturas = new ArrayList<>();
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id_usuario", cascade = {CascadeType.REFRESH})
+    private List<CarritoEntity> carritos = new ArrayList<>();
 
     public UsuarioEntity() {
     }
@@ -201,5 +204,13 @@ public class UsuarioEntity implements Serializable {
     public String toString() {
         return "Usuario [id=" + id + ",dni=" + dni + ",nombre=" + nombre + ",apellido1=" + apellido1 + ",login=" + login
                 + ",email=" + email + ",descuento=" + descuento + "]";
+    }
+
+    public int getCarritos() {
+        return carritos.size();
+    }
+
+    public int getFacturas() {
+        return facturas.size();
     }
 }
