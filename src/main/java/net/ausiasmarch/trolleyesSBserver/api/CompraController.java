@@ -35,8 +35,10 @@ package net.ausiasmarch.trolleyesSBserver.api;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import net.ausiasmarch.trolleyesSBserver.entity.CompraEntity;
+import net.ausiasmarch.trolleyesSBserver.entity.FacturaEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.ProductoEntity;
 import net.ausiasmarch.trolleyesSBserver.repository.CompraRepository;
+import net.ausiasmarch.trolleyesSBserver.repository.FacturaRepository;
 import net.ausiasmarch.trolleyesSBserver.repository.ProductoRepository;
 import net.ausiasmarch.trolleyesSBserver.service.FillService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +66,9 @@ public class CompraController {
 
     @Autowired
     ProductoRepository oProductoRepository;
+    
+    @Autowired
+    FacturaRepository oFacturaRepository;
 
     @Autowired
     CompraRepository oCompraRepository;
@@ -153,6 +158,19 @@ public class CompraController {
 
 
 
+    }
+    
+    @GetMapping("/page/factura/{id}")
+    public ResponseEntity<?> getPageXFactura(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable, @PathVariable(value = "id") Long id) {
+    
+        if (oFacturaRepository.existsById(id)) {
+            FacturaEntity oFacturaEntity = oFacturaRepository.getOne(id);
+            Page<CompraEntity> oPage = oCompraRepository.findByFactura(oFacturaEntity, oPageable);
+            return new ResponseEntity<Page<CompraEntity>>(oPage, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+        
     }
 
 }
