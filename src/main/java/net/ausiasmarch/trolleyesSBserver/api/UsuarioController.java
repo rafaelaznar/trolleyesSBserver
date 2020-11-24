@@ -35,7 +35,9 @@ package net.ausiasmarch.trolleyesSBserver.api;
 import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpSession;
+import net.ausiasmarch.trolleyesSBserver.entity.TipousuarioEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.UsuarioEntity;
+import net.ausiasmarch.trolleyesSBserver.repository.TipousuarioRepository;
 import net.ausiasmarch.trolleyesSBserver.repository.UsuarioRepository;
 import net.ausiasmarch.trolleyesSBserver.service.FillService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +65,10 @@ public class UsuarioController {
 
     @Autowired
     UsuarioRepository oUsuarioRepository;
-
+    
+    @Autowired
+    TipousuarioRepository oTipousuarioRepository;
+    
     @Autowired
     FillService oFillService;
 
@@ -229,5 +234,18 @@ public class UsuarioController {
             }
             
         }
+    }
+    
+    @GetMapping("/page/tipousuario/{id}")
+    public ResponseEntity<?> getPageXTipousuario(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable, @PathVariable(value = "id") Long id) {
+
+        if (oTipousuarioRepository.existsById(id)) {
+            TipousuarioEntity oTipousuarioEntity = oTipousuarioRepository.getOne(id);
+            Page<UsuarioEntity> oPage = oUsuarioRepository.findByTipousuario(oTipousuarioEntity, oPageable);
+            return new ResponseEntity<Page<UsuarioEntity>>(oPage, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+
     }
 }
