@@ -122,11 +122,22 @@ public class UsuarioController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
-        oUsuarioRepository.deleteById(id);
-        if (oUsuarioRepository.existsById(id)) {
-            return new ResponseEntity<Long>(id, HttpStatus.NOT_MODIFIED);
+
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
-            return new ResponseEntity<Long>(0L, HttpStatus.OK);
+            if (oUsuarioEntity.getTipousuario().getId() == 1) { //administrador
+                oUsuarioRepository.deleteById(id);
+                if (oUsuarioRepository.existsById(id)) {
+                    return new ResponseEntity<Long>(id, HttpStatus.NOT_MODIFIED);
+                } else {
+                    return new ResponseEntity<Long>(0L, HttpStatus.OK);
+                }
+            } else {  //cliente
+                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }
         }
     }
 
