@@ -35,6 +35,7 @@ package net.ausiasmarch.trolleyesSBserver.api;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import net.ausiasmarch.trolleyesSBserver.entity.TipousuarioEntity;
+import net.ausiasmarch.trolleyesSBserver.entity.UsuarioEntity;
 import net.ausiasmarch.trolleyesSBserver.repository.TipousuarioRepository;
 import net.ausiasmarch.trolleyesSBserver.service.FillService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,11 +107,23 @@ public class TipousuarioController {
 
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestBody TipousuarioEntity oTipousuarioEntity) {
-        if (oTipousuarioEntity.getId() == null) {
-            return new ResponseEntity<TipousuarioEntity>(oTipousuarioRepository.save(oTipousuarioEntity), HttpStatus.OK);
+
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
-            return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+            if (oUsuarioEntity.getTipousuario().getId() == 1 || oUsuarioEntity.getTipousuario().getId() == 2) { //administrador o usuario serán rechazados
+                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            } else {
+                if (oTipousuarioEntity.getId() == null) {
+                    return new ResponseEntity<TipousuarioEntity>(oTipousuarioRepository.save(oTipousuarioEntity), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+                }
+            }
+
         }
+
     }
 
     @PutMapping("/{id}")
