@@ -35,7 +35,9 @@ package net.ausiasmarch.trolleyesSBserver.api;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import net.ausiasmarch.trolleyesSBserver.entity.CarritoEntity;
+import net.ausiasmarch.trolleyesSBserver.entity.ProductoEntity;
 import net.ausiasmarch.trolleyesSBserver.repository.CarritoRepository;
+import net.ausiasmarch.trolleyesSBserver.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -61,6 +63,9 @@ public class CarritoController {
 
     @Autowired
     CarritoRepository oCarritoRepository;
+    
+    @Autowired
+    ProductoRepository oProductoRepository;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
@@ -120,4 +125,15 @@ public class CarritoController {
         return new ResponseEntity<Page<CarritoEntity>>(oPage, HttpStatus.OK);        
     }
     
+    @GetMapping("/page/producto/{id}")
+    public ResponseEntity<?> getPageXProducto(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable, @PathVariable(value = "id") Long id) {
+
+        if (oProductoRepository.existsById(id)) {
+            ProductoEntity oProductoEntity = oProductoRepository.getOne(id);
+            Page<CarritoEntity> oPage = oCarritoRepository.findByProducto(oProductoEntity, oPageable);
+            return new ResponseEntity<Page<CarritoEntity>>(oPage, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+    }
 }
