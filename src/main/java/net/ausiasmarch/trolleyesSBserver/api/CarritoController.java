@@ -36,8 +36,10 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 import net.ausiasmarch.trolleyesSBserver.entity.CarritoEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.ProductoEntity;
+import net.ausiasmarch.trolleyesSBserver.entity.UsuarioEntity;
 import net.ausiasmarch.trolleyesSBserver.repository.CarritoRepository;
 import net.ausiasmarch.trolleyesSBserver.repository.ProductoRepository;
+import net.ausiasmarch.trolleyesSBserver.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -67,6 +69,9 @@ public class CarritoController {
     @Autowired
     ProductoRepository oProductoRepository;
 
+    @Autowired
+    UsuarioRepository oUsuarioRepository;
+        
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
         if (oCarritoRepository.existsById(id)) {
@@ -131,6 +136,18 @@ public class CarritoController {
         if (oProductoRepository.existsById(id)) {
             ProductoEntity oProductoEntity = oProductoRepository.getOne(id);
             Page<CarritoEntity> oPage = oCarritoRepository.findByProducto(oProductoEntity, oPageable);
+            return new ResponseEntity<Page<CarritoEntity>>(oPage, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/page/usuario/{id}")
+    public ResponseEntity<?> getPageXUsuario(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable, @PathVariable(value = "id") Long id) {
+
+        if (oUsuarioRepository.existsById(id)) {
+            UsuarioEntity oUsuarioEntity = oUsuarioRepository.getOne(id);
+            Page<CarritoEntity> oPage = oCarritoRepository.findByUsuario(oUsuarioEntity, oPageable);
             return new ResponseEntity<Page<CarritoEntity>>(oPage, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.OK);
