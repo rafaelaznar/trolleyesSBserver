@@ -49,6 +49,11 @@ public interface CarritoRepository extends JpaRepository<CarritoEntity, Long>  {
     
     Page<CarritoEntity> findByProducto(ProductoEntity oProductoEntity, Pageable oPageable);
     
+    @Query(value = "SELECT * FROM carrito c WHERE c.id_usuario = :id_usuario", nativeQuery = true)
+    Page<CarritoEntity> findByCarritoXUsuario(Long id_usuario, Pageable pageable);
+    
+    Page<CarritoEntity> findByUsuario(UsuarioEntity oUsuarioEntity, Pageable oPageable);
+    
     Long countByUsuarioAndProducto(UsuarioEntity oUsuarioEntity,  ProductoEntity oProductoEntity);
     
 }

@@ -42,6 +42,7 @@ import net.ausiasmarch.trolleyesSBserver.entity.UsuarioEntity;
 import net.ausiasmarch.trolleyesSBserver.repository.CarritoRepository;
 import net.ausiasmarch.trolleyesSBserver.repository.ProductoRepository;
 import net.ausiasmarch.trolleyesSBserver.service.CarritoService;
+import net.ausiasmarch.trolleyesSBserver.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -74,6 +75,9 @@ public class CarritoController {
     @Autowired
     CarritoService oCarritoService;
 
+    @Autowired
+    UsuarioRepository oUsuarioRepository;
+
     //ADD añadir un producto al carrito con una determinada cantidad -> params: producto, cantidad (POST)
     //REDUCE quitar un producto del carrito en una determinada cantidad -> params: producto, cantidad (DELETE)
     //REMOVE quitar un producto totalmente del carrito -> params: producto (DELETE)
@@ -90,8 +94,8 @@ public class CarritoController {
         } else {
             try {
                 return new ResponseEntity<>(oCarritoService.insert(oUsuarioEntity, oProductoEntity, cantidad), HttpStatus.OK);
-            } catch (Exception ex) {                
-                return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);                
+            } catch (Exception ex) {
+                return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
             }
         }
     }
@@ -160,6 +164,18 @@ public class CarritoController {
         if (oProductoRepository.existsById(id)) {
             ProductoEntity oProductoEntity = oProductoRepository.getOne(id);
             Page<CarritoEntity> oPage = oCarritoRepository.findByProducto(oProductoEntity, oPageable);
+            return new ResponseEntity<Page<CarritoEntity>>(oPage, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/page/usuario/{id}")
+    public ResponseEntity<?> getPageXUsuario(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable, @PathVariable(value = "id") Long id) {
+
+        if (oUsuarioRepository.existsById(id)) {
+            UsuarioEntity oUsuarioEntity = oUsuarioRepository.getOne(id);
+            Page<CarritoEntity> oPage = oCarritoRepository.findByUsuario(oUsuarioEntity, oPageable);
             return new ResponseEntity<Page<CarritoEntity>>(oPage, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.OK);
