@@ -35,8 +35,10 @@ package net.ausiasmarch.trolleyesSBserver.api;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import net.ausiasmarch.trolleyesSBserver.entity.ProductoEntity;
+import net.ausiasmarch.trolleyesSBserver.entity.TipoproductoEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.UsuarioEntity;
 import net.ausiasmarch.trolleyesSBserver.repository.ProductoRepository;
+import net.ausiasmarch.trolleyesSBserver.repository.TipoproductoRepository;
 import net.ausiasmarch.trolleyesSBserver.service.FillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -64,6 +66,9 @@ public class ProductoController {
 
     @Autowired
     ProductoRepository oProductoRepository;
+    
+    @Autowired
+    TipoproductoRepository oTipoproductoRepository;
 
     @Autowired
     FillService oFillService;
@@ -153,5 +158,17 @@ public class ProductoController {
         Page<ProductoEntity> oPage = oProductoRepository.findAll(oPageable);
         return new ResponseEntity<Page<ProductoEntity>>(oPage, HttpStatus.OK);
     }
+    
+    @GetMapping("/page/tipoproducto/{id}")
+    public ResponseEntity<?> getPageXTipoproducto(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable, @PathVariable(value = "id") Long id) {
 
+        if (oTipoproductoRepository.existsById(id)) {
+            TipoproductoEntity oTipoproductoEntity = oTipoproductoRepository.getOne(id);
+            Page<ProductoEntity> oPage = oProductoRepository.findByTipoproducto(oTipoproductoEntity, oPageable);
+            return new ResponseEntity<Page<ProductoEntity>>(oPage, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+
+    }
 }
