@@ -35,7 +35,9 @@ package net.ausiasmarch.trolleyesSBserver.api;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import net.ausiasmarch.trolleyesSBserver.entity.FacturaEntity;
+import net.ausiasmarch.trolleyesSBserver.entity.UsuarioEntity;
 import net.ausiasmarch.trolleyesSBserver.repository.FacturaRepository;
+import net.ausiasmarch.trolleyesSBserver.repository.UsuarioRepository;
 import net.ausiasmarch.trolleyesSBserver.service.FillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -63,6 +65,9 @@ public class FacturaController {
 
     @Autowired
     FacturaRepository oFacturaRepository;
+    
+    @Autowired
+    UsuarioRepository oUsuarioRepository;
 
     @Autowired
     FillService oFillService;
@@ -125,7 +130,19 @@ public class FacturaController {
         Page<FacturaEntity> oPage = oFacturaRepository.findAll(oPageable);
         return new ResponseEntity<Page<FacturaEntity>>(oPage, HttpStatus.OK);
     }
+    
+    @GetMapping("/pagexusuario/{id}")
+    public ResponseEntity<?> getPageXUsuario(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable, @PathVariable(value = "id") Long id) {
 
+        if (oUsuarioRepository.existsById(id)) {
+            UsuarioEntity oUsuarioEntity = oUsuarioRepository.getOne(id);
+            Page<FacturaEntity> oPage = oFacturaRepository.findByUsuario(oUsuarioEntity, oPageable);
+            return new ResponseEntity<Page<FacturaEntity>>(oPage, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+    }
+    
     @PostMapping("/fill/{amount}")
     public ResponseEntity<?> fill(@PathVariable(value = "amount") Long amount) {
         return new ResponseEntity<Long>(oFillService.facturaFill(amount), HttpStatus.OK);
