@@ -33,10 +33,19 @@
 package net.ausiasmarch.trolleyesSBserver.repository;
 
 import net.ausiasmarch.trolleyesSBserver.entity.FacturaEntity;
+import net.ausiasmarch.trolleyesSBserver.entity.UsuarioEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FacturaRepository extends JpaRepository<FacturaEntity, Long> {
+    
+    @Query(value = "SELECT * FROM factura f WHERE f.id_usuario = :id_usuario", nativeQuery = true)
+    Page<FacturaEntity> findByFacturaXUsuario(Long id_usuario, Pageable pageable);
+
+    Page<FacturaEntity> findByUsuario(UsuarioEntity oUsuarioEntity, Pageable oPageable);
     
 }
