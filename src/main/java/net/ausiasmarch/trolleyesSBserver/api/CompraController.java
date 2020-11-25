@@ -68,7 +68,7 @@ public class CompraController {
 
     @Autowired
     ProductoRepository oProductoRepository;
-    
+
     @Autowired
     FacturaRepository oFacturaRepository;
 
@@ -83,10 +83,25 @@ public class CompraController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
-        if (oCompraRepository.existsById(id)) {
-            return new ResponseEntity<CompraEntity>(oCompraRepository.getOne(id), HttpStatus.OK);
+
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
-            return new ResponseEntity<CompraEntity>(oCompraRepository.getOne(id), HttpStatus.NOT_FOUND);
+            if (oUsuarioEntity.getTipousuario().getId() == 1) {
+                if (oCompraRepository.existsById(id)) {
+                    return new ResponseEntity<CompraEntity>(oCompraRepository.getOne(id), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<CompraEntity>(oCompraRepository.getOne(id), HttpStatus.NOT_FOUND);
+                }
+            }else{
+                if (id.equals(oUsuarioEntity.getId())) {  //los datos pedidos por el cliente son sus propios datos
+                    return new ResponseEntity<CompraEntity>(oCompraRepository.getOne(id), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+                }
+            }
         }
     }
 
@@ -175,10 +190,10 @@ public class CompraController {
         }
 
     }
-    
+
     @GetMapping("/page/factura/{id}")
     public ResponseEntity<?> getPageXFactura(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable, @PathVariable(value = "id") Long id) {
-    
+
         if (oFacturaRepository.existsById(id)) {
             FacturaEntity oFacturaEntity = oFacturaRepository.getOne(id);
             Page<CompraEntity> oPage = oCompraRepository.findByFactura(oFacturaEntity, oPageable);
@@ -186,7 +201,7 @@ public class CompraController {
         } else {
             return new ResponseEntity<>(null, HttpStatus.OK);
         }
-        
+
     }
 
 }
