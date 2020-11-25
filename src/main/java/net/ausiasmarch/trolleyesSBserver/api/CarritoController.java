@@ -33,12 +33,15 @@
 package net.ausiasmarch.trolleyesSBserver.api;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpSession;
 import net.ausiasmarch.trolleyesSBserver.entity.CarritoEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.ProductoEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.UsuarioEntity;
 import net.ausiasmarch.trolleyesSBserver.repository.CarritoRepository;
 import net.ausiasmarch.trolleyesSBserver.repository.ProductoRepository;
+import net.ausiasmarch.trolleyesSBserver.service.CarritoService;
 import net.ausiasmarch.trolleyesSBserver.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -65,13 +68,38 @@ public class CarritoController {
 
     @Autowired
     CarritoRepository oCarritoRepository;
-    
+
     @Autowired
     ProductoRepository oProductoRepository;
 
     @Autowired
+    CarritoService oCarritoService;
+
+    @Autowired
     UsuarioRepository oUsuarioRepository;
-        
+
+    //ADD añadir un producto al carrito con una determinada cantidad -> params: producto, cantidad (POST)
+    //REDUCE quitar un producto del carrito en una determinada cantidad -> params: producto, cantidad (DELETE)
+    //REMOVE quitar un producto totalmente del carrito -> params: producto (DELETE)
+    //CLEAR vaciar el carrito completamente (DELETE)
+    //BUY comprar los productos en el carrito (PUT)
+    //
+    //PAGE (GET)
+    //GET (GET)
+    @PostMapping("/{producto}/{cantidad}")
+    public ResponseEntity<?> add(@PathVariable(value = "producto") ProductoEntity oProductoEntity, @PathVariable(value = "cantidad") int cantidad) {
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        } else {
+            try {
+                return new ResponseEntity<>(oCarritoService.insert(oUsuarioEntity, oProductoEntity, cantidad), HttpStatus.OK);
+            } catch (Exception ex) {
+                return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+            }
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
         if (oCarritoRepository.existsById(id)) {
@@ -103,7 +131,7 @@ public class CarritoController {
             return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
         }
     }
-    
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         oCarritoRepository.deleteById(id);
@@ -113,7 +141,7 @@ public class CarritoController {
             return new ResponseEntity<Long>(0L, HttpStatus.OK);
         }
     }
-    
+
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody CarritoEntity oCarritoEntity) {
         oCarritoEntity.setId(id);
@@ -123,13 +151,13 @@ public class CarritoController {
             return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
         }
     }
-    
+
     @GetMapping("/page")
-    public ResponseEntity<?> getPage(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable) {        
-        Page<CarritoEntity> oPage= oCarritoRepository.findAll(oPageable);            
-        return new ResponseEntity<Page<CarritoEntity>>(oPage, HttpStatus.OK);        
+    public ResponseEntity<?> getPage(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable) {
+        Page<CarritoEntity> oPage = oCarritoRepository.findAll(oPageable);
+        return new ResponseEntity<Page<CarritoEntity>>(oPage, HttpStatus.OK);
     }
-    
+
     @GetMapping("/page/producto/{id}")
     public ResponseEntity<?> getPageXProducto(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable, @PathVariable(value = "id") Long id) {
 

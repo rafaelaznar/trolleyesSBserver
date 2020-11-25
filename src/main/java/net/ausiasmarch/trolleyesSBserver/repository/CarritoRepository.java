@@ -44,8 +44,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CarritoRepository extends JpaRepository<CarritoEntity, Long>  {
     
-    @Query(value = "SELECT * FROM carrito c WHERE c.id_producto = :id_producto", nativeQuery = true)
-            
+    @Query(value = "SELECT * FROM carrito c WHERE c.id_producto = :id_producto", nativeQuery = true)            
     Page<CarritoEntity> findByCarritoXProducto(Long id_producto, Pageable pageable);
     
     Page<CarritoEntity> findByProducto(ProductoEntity oProductoEntity, Pageable oPageable);
@@ -54,4 +53,7 @@ public interface CarritoRepository extends JpaRepository<CarritoEntity, Long>  {
     Page<CarritoEntity> findByCarritoXUsuario(Long id_usuario, Pageable pageable);
     
     Page<CarritoEntity> findByUsuario(UsuarioEntity oUsuarioEntity, Pageable oPageable);
+    
+    Long countByUsuarioAndProducto(UsuarioEntity oUsuarioEntity,  ProductoEntity oProductoEntity);
+    
 }
