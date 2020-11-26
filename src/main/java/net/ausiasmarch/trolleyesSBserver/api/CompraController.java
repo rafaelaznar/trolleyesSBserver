@@ -130,11 +130,22 @@ public class CompraController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
-        oCompraRepository.deleteById(id);
-        if (oCompraRepository.existsById(id)) {
-            return new ResponseEntity<Long>(id, HttpStatus.NOT_MODIFIED);
+
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
-            return new ResponseEntity<Long>(0L, HttpStatus.OK);
+            if (oUsuarioEntity.getTipousuario().getId() == 1) {
+                oCompraRepository.deleteById(id);
+                if (oCompraRepository.existsById(id)) {
+                    return new ResponseEntity<Long>(id, HttpStatus.NOT_MODIFIED);
+                } else {
+                    return new ResponseEntity<Long>(0L, HttpStatus.OK);
+                }
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }
         }
     }
 
