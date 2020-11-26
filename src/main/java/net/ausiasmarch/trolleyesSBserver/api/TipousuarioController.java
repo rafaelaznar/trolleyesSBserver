@@ -102,7 +102,18 @@ public class TipousuarioController {
 
     @PostMapping("/fill")
     public ResponseEntity<?> fill() {
-        return new ResponseEntity<Long>(oFillService.tipousuarioFill(), HttpStatus.OK);
+  
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");     
+            if (oUsuarioEntity == null) {
+                 return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }else{
+                 if (oUsuarioEntity.getTipousuario().getId() == 1) {
+                    return new ResponseEntity<Long>(oFillService.tipousuarioFill(), HttpStatus.OK);
+                }else{
+                    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+                }
+            }  
+        
     }
 
     @PostMapping("/")
