@@ -86,19 +86,37 @@ public class CarritoController {
     //
     //PAGE (GET)
     //GET (GET)
-    @PostMapping("/{producto}/{cantidad}")
-    public ResponseEntity<?> add(@PathVariable(value = "producto") ProductoEntity oProductoEntity, @PathVariable(value = "cantidad") int cantidad) {
+    @PostMapping("/{id_producto}/{cantidad}")
+    public ResponseEntity<?> add(@PathVariable(value = "id_producto") Long id_producto, @PathVariable(value = "cantidad") int cantidad) {
         UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
         if (oUsuarioEntity == null) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
             try {
-                return new ResponseEntity<>(oCarritoService.insert(oUsuarioEntity, oProductoEntity, cantidad), HttpStatus.OK);
+                return new ResponseEntity<>(oCarritoService.insert(oUsuarioEntity, id_producto, cantidad), HttpStatus.OK);
             } catch (Exception ex) {
                 return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
             }
         }
     }
+    
+    @DeleteMapping("/{id_carrito}/{cantidad}")
+    public ResponseEntity<?> reduce(@PathVariable(value = "id_carrito") Long id_carrito, @PathVariable(value = "cantidad") int cantidad) {
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        } else {
+            try {
+                return new ResponseEntity<>(oCarritoService.reduce(oUsuarioEntity, id_carrito, cantidad), HttpStatus.OK);
+            } catch (Exception ex) {
+                return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+            }
+        } 
+    }
+    
+    
+    
+    
 
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {

@@ -27,8 +27,7 @@ CREATE TABLE `carrito` (
   `cantidad` int(11) NOT NULL,
   `precio` double(10,2) NOT NULL,
   `id_producto` bigint(20) NOT NULL,
-  `id_usuario` bigint(20) NOT NULL,
-  `id_compra` bigint(20) DEFAULT NULL
+  `id_usuario` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
