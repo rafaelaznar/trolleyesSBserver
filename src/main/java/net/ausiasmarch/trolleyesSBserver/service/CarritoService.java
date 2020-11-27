@@ -36,7 +36,9 @@ public class CarritoService {
                         } else {
                             //obtener el producto del carrito del cliente e incrementarlo --> eugenio
                             //y devolver el item de carrito
-
+                            CarritoEntity oCarritoEntity = (CarritoEntity) oCarritoRepository.findByUsuarioAndProducto(oUsuarioEntity.getId(), id_producto);
+                            oCarritoEntity.setCantidad(oCarritoEntity.getCantidad() + cantidad);
+                            return oCarritoRepository.save(oCarritoEntity);
                         }
 
                     } else {
@@ -52,7 +54,6 @@ public class CarritoService {
         } else {
             throw new Exception("UNAUTORIZED");
         }
-        return null;
     }
 
     public Optional<CarritoEntity> reduce(UsuarioEntity oUsuarioEntity, Long id_carrito, int cantidad) throws Exception {

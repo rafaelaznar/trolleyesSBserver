@@ -56,4 +56,7 @@ public interface CarritoRepository extends JpaRepository<CarritoEntity, Long>  {
     
     Long countByUsuarioAndProducto(UsuarioEntity oUsuarioEntity,  ProductoEntity oProductoEntity);
     
+    @Query(value = "SELECT * FROM carrito c WHERE c.id_usuario = :id_usuario and c.id_producto = :id_producto", nativeQuery = true)
+    CarritoEntity findByUsuarioAndProducto(Long id_usuario, Long id_producto);
+    
 }
