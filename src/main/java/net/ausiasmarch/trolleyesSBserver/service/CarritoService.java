@@ -54,7 +54,6 @@ public class CarritoService {
         } else {
             throw new Exception("UNAUTORIZED");
         }
-        //return null;
     }
 
     public Optional<CarritoEntity> reduce(UsuarioEntity oUsuarioEntity, Long id_carrito, int cantidad) throws Exception {
