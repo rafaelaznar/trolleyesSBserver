@@ -116,17 +116,38 @@ public class ProductoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody ProductoEntity oProductoEntity) {
-        oProductoEntity.setId(id);
-        if (oProductoRepository.existsById(id)) {
-            return new ResponseEntity<ProductoEntity>(oProductoRepository.save(oProductoEntity), HttpStatus.OK);
+
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
-            return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+            if (oUsuarioEntity.getTipousuario().getId() == 1) { //administrador
+                oProductoEntity.setId(id);
+                if (oProductoRepository.existsById(id)) {
+                    return new ResponseEntity<ProductoEntity>(oProductoRepository.save(oProductoEntity), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+                }
+            } else {  //cliente
+                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }
         }
+
     }
 
     @PostMapping("/fill/{amount}")
     public ResponseEntity<?> fill(@PathVariable(value = "amount") Long amount) {
-        return new ResponseEntity<Long>(oFillService.productoFill(amount), HttpStatus.OK);
+         UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");     
+            if (oUsuarioEntity == null) {
+                 return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }else{
+                 if (oUsuarioEntity.getTipousuario().getId() == 1) {
+                    return new ResponseEntity<Long>(oFillService.productoFill(amount), HttpStatus.OK);
+                }else{
+                    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+                }
+            }       
     }
 
     @DeleteMapping("/{id}")

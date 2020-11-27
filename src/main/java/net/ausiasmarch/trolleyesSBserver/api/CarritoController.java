@@ -99,7 +99,7 @@ public class CarritoController {
             }
         }
     }
-    
+
     @DeleteMapping("/{id_carrito}/{cantidad}")
     public ResponseEntity<?> reduce(@PathVariable(value = "id_carrito") Long id_carrito, @PathVariable(value = "cantidad") int cantidad) {
         UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
@@ -111,13 +111,54 @@ public class CarritoController {
             } catch (Exception ex) {
                 return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
             }
-        } 
+        }
     }
-    
-    
-    
-    
 
+    @DeleteMapping("/{id_carrito}")
+    public ResponseEntity<?> delete(@PathVariable(value = "id_carrito") Long id_carrito) {
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        } else {
+            try {
+                oCarritoService.remove(oUsuarioEntity, id_carrito);
+                return new ResponseEntity<>(null, HttpStatus.OK);
+            } catch (Exception ex) {
+                return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_MODIFIED);
+            }
+        }
+    }
+
+    @DeleteMapping("/")
+    public ResponseEntity<?> empty() {
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        } else {
+            try {
+                oCarritoService.clear(oUsuarioEntity);
+                return new ResponseEntity<>(null, HttpStatus.OK);
+            } catch (Exception ex) {
+                return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_MODIFIED);
+            }
+        }
+    }
+
+    @PutMapping("/")
+    public ResponseEntity<?> buy() {
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        } else {
+            try {
+                oCarritoService.purchase(oUsuarioEntity);
+                return new ResponseEntity<>(null, HttpStatus.OK);
+            } catch (Exception ex) {
+                return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_MODIFIED);
+            }
+        }
+    }    
+    
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
         if (oCarritoRepository.existsById(id)) {
@@ -138,35 +179,6 @@ public class CarritoController {
             return new ResponseEntity<List<CarritoEntity>>(oCarritoRepository.findAll(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.PAYLOAD_TOO_LARGE);
-        }
-    }
-
-    @PostMapping("/")
-    public ResponseEntity<?> create(@RequestBody CarritoEntity oCarritoEntity) {
-        if (oCarritoEntity.getId() == null) {
-            return new ResponseEntity<CarritoEntity>(oCarritoRepository.save(oCarritoEntity), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
-        oCarritoRepository.deleteById(id);
-        if (oCarritoRepository.existsById(id)) {
-            return new ResponseEntity<Long>(id, HttpStatus.NOT_MODIFIED);
-        } else {
-            return new ResponseEntity<Long>(0L, HttpStatus.OK);
-        }
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody CarritoEntity oCarritoEntity) {
-        oCarritoEntity.setId(id);
-        if (oCarritoRepository.existsById(id)) {
-            return new ResponseEntity<CarritoEntity>(oCarritoRepository.save(oCarritoEntity), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
         }
     }
 

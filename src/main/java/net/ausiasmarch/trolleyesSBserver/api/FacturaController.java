@@ -108,21 +108,52 @@ public class FacturaController {
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestBody FacturaEntity oFacturaEntity) {
 
-        if (oFacturaEntity.getId() == null) {
-            return new ResponseEntity<FacturaEntity>(oFacturaRepository.save(oFacturaEntity), HttpStatus.OK);
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
-            return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+
+            if (oUsuarioEntity.getTipousuario().getId() == 1) { //administrador
+
+                if (oFacturaEntity.getId() == null) {
+                    return new ResponseEntity<FacturaEntity>(oFacturaRepository.save(oFacturaEntity), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+                }
+
+            } else {  //cliente
+
+                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }
         }
+
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
-        oFacturaRepository.deleteById(id);
-        if (oFacturaRepository.existsById(id)) {
-            return new ResponseEntity<Long>(id, HttpStatus.NOT_MODIFIED);
+
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
-            return new ResponseEntity<Long>(0L, HttpStatus.OK);
+
+            if (oUsuarioEntity.getTipousuario().getId() == 1) { //administrador
+
+                oFacturaRepository.deleteById(id);
+                if (oFacturaRepository.existsById(id)) {
+                    return new ResponseEntity<Long>(id, HttpStatus.NOT_MODIFIED);
+                } else {
+                    return new ResponseEntity<Long>(0L, HttpStatus.OK);
+                }
+
+            } else {  //cliente
+
+                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }
         }
+
     }
 
     @GetMapping("/count")
@@ -132,12 +163,28 @@ public class FacturaController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody FacturaEntity oFacturaEntity) {
-        oFacturaEntity.setId(id);
-        if (oFacturaRepository.existsById(id)) {
-            return new ResponseEntity<FacturaEntity>(oFacturaRepository.save(oFacturaEntity), HttpStatus.OK);
+
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
-            return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+
+            if (oUsuarioEntity.getTipousuario().getId() == 1) { //administrador
+
+                oFacturaEntity.setId(id);
+                if (oFacturaRepository.existsById(id)) {
+                    return new ResponseEntity<FacturaEntity>(oFacturaRepository.save(oFacturaEntity), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
+                }
+
+            } else {  //cliente
+
+                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }
         }
+
     }
 
     @GetMapping("/page")
@@ -176,7 +223,15 @@ public class FacturaController {
     
     @PostMapping("/fill/{amount}")
     public ResponseEntity<?> fill(@PathVariable(value = "amount") Long amount) {
-        return new ResponseEntity<Long>(oFillService.facturaFill(amount), HttpStatus.OK);
-    }
-
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");     
+            if (oUsuarioEntity == null) {
+                 return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }else{
+                 if (oUsuarioEntity.getTipousuario().getId() == 1) {
+                    return new ResponseEntity<Long>(oFillService.facturaFill(amount), HttpStatus.OK);
+                }else{
+                    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+                }
+            }                         
+    }           
 }

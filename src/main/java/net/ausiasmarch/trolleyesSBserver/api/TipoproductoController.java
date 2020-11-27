@@ -117,7 +117,16 @@ public class TipoproductoController {
 
     @PostMapping("/fill/{amount}")
     public ResponseEntity<?> fill(@PathVariable(value = "amount") Long amount) {
-        return new ResponseEntity<Long>(oFillService.tipoproductoFill(amount), HttpStatus.OK);
+          UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");     
+            if (oUsuarioEntity == null) {
+                 return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }else{
+                 if (oUsuarioEntity.getTipousuario().getId() == 1) {
+                    return new ResponseEntity<Long>(oFillService.tipoproductoFill(amount), HttpStatus.OK);
+                }else{
+                    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+                }
+            }    
     }
 
     @DeleteMapping("/{id}")
