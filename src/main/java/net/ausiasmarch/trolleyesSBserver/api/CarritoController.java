@@ -144,6 +144,21 @@ public class CarritoController {
         }
     }
 
+    @PutMapping("/")
+    public ResponseEntity<?> buy() {
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        } else {
+            try {
+                oCarritoService.purchase(oUsuarioEntity);
+                return new ResponseEntity<>(null, HttpStatus.OK);
+            } catch (Exception ex) {
+                return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_MODIFIED);
+            }
+        }
+    }    
+    
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
         if (oCarritoRepository.existsById(id)) {
