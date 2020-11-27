@@ -30,7 +30,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- */package net.ausiasmarch.trolleyesSBserver.repository;
+ */
+package net.ausiasmarch.trolleyesSBserver.repository;
 
 import net.ausiasmarch.trolleyesSBserver.entity.CarritoEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.ProductoEntity;
@@ -42,21 +43,24 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CarritoRepository extends JpaRepository<CarritoEntity, Long>  {
-    
-    @Query(value = "SELECT * FROM carrito c WHERE c.id_producto = :id_producto", nativeQuery = true)            
+public interface CarritoRepository extends JpaRepository<CarritoEntity, Long> {
+
+    @Query(value = "SELECT * FROM carrito c WHERE c.id_producto = :id_producto", nativeQuery = true)
     Page<CarritoEntity> findByCarritoXProducto(Long id_producto, Pageable pageable);
-    
+
     Page<CarritoEntity> findByProducto(ProductoEntity oProductoEntity, Pageable oPageable);
-    
+
     @Query(value = "SELECT * FROM carrito c WHERE c.id_usuario = :id_usuario", nativeQuery = true)
     Page<CarritoEntity> findByCarritoXUsuario(Long id_usuario, Pageable pageable);
-    
+
     Page<CarritoEntity> findByUsuario(UsuarioEntity oUsuarioEntity, Pageable oPageable);
-    
-    Long countByUsuarioAndProducto(UsuarioEntity oUsuarioEntity,  ProductoEntity oProductoEntity);
-    
+
+    Long countByUsuarioAndProducto(UsuarioEntity oUsuarioEntity, ProductoEntity oProductoEntity);
+
     @Query(value = "SELECT * FROM carrito c WHERE c.id_usuario = :id_usuario and c.id_producto = :id_producto", nativeQuery = true)
     CarritoEntity findByUsuarioAndProducto(Long id_usuario, Long id_producto);
-    
+
+    Long deleteByUsuario(UsuarioEntity oUsuarioEntity);
+
+    Long deleteByIdAndUsuario(Long id, UsuarioEntity oUsuarioEntity);
 }
