@@ -92,10 +92,21 @@ public class CompraController {
 
     @GetMapping("/all")
     public ResponseEntity<?> all() {
-        if (oCompraRepository.count() <= 1000) {
-            return new ResponseEntity<List<CompraEntity>>(oCompraRepository.findAll(), HttpStatus.OK);
+
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
-            return new ResponseEntity<>(null, HttpStatus.PAYLOAD_TOO_LARGE);
+            if (oUsuarioEntity.getTipousuario().getId() == 1) {
+                if (oCompraRepository.count() <= 1000) {
+                    return new ResponseEntity<List<CompraEntity>>(oCompraRepository.findAll(), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(null, HttpStatus.PAYLOAD_TOO_LARGE);
+                }
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }
         }
     }
 
