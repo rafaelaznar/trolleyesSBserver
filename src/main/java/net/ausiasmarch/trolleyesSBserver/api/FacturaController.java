@@ -74,22 +74,37 @@ public class FacturaController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
-        if (oFacturaRepository.existsById(id)) {
-            return new ResponseEntity<FacturaEntity>(oFacturaRepository.getOne(id), HttpStatus.OK);
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        FacturaEntity oFacturaEntity = new FacturaEntity();
+
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
-            return new ResponseEntity<FacturaEntity>(oFacturaRepository.getOne(id), HttpStatus.NOT_FOUND);
+            if (oUsuarioEntity.getTipousuario().getId() == 1) { //administrador
+                if (oFacturaRepository.existsById(id)) {
+                    return new ResponseEntity<FacturaEntity>(oFacturaRepository.getOne(id), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<FacturaEntity>(oFacturaRepository.getOne(id), HttpStatus.NOT_FOUND);
+                }
+            } else {  //cliente
+                if (oFacturaEntity.getUsuario().getId().equals(oUsuarioEntity.getId())) {  //los datos pedidos por el cliente son sus propios datos?
+                    return new ResponseEntity<FacturaEntity>(oFacturaRepository.getOne(id), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+                }
+            }
         }
     }
 
     @GetMapping("/all")
     public ResponseEntity<?> all() {
-        if (oFacturaRepository.count() <= 1000) {
-            return new ResponseEntity<List<FacturaEntity>>(oFacturaRepository.findAll(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(null, HttpStatus.PAYLOAD_TOO_LARGE);
-        }
-    }
-
+ if (oFacturaRepository.count() <= 1000) {
+                    return new ResponseEntity<List<FacturaEntity>>(oFacturaRepository.findAll(), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(null, HttpStatus.PAYLOAD_TOO_LARGE);
+                }
+            }
+   
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestBody FacturaEntity oFacturaEntity) {
 
@@ -174,8 +189,24 @@ public class FacturaController {
 
     @GetMapping("/page")
     public ResponseEntity<?> getPage(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable) {
+
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        FacturaEntity oFacturaEntity = new FacturaEntity();
+
         Page<FacturaEntity> oPage = oFacturaRepository.findAll(oPageable);
-        return new ResponseEntity<Page<FacturaEntity>>(oPage, HttpStatus.OK);
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        } else {
+            if (oUsuarioEntity.getTipousuario().getId() == 1) { //administrador
+                return new ResponseEntity<Page<FacturaEntity>>(oPage, HttpStatus.OK);
+            } else {  //cliente
+                if (oFacturaEntity.getUsuario().getId().equals(oUsuarioEntity.getId())) {  //los datos pedidos por el cliente son sus propios datos?
+                    return new ResponseEntity<Page<FacturaEntity>>(oPage, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+                }
+            }
+        }
     }
     
     @GetMapping("/pagexusuario/{id}")
