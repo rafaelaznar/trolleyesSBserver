@@ -162,7 +162,7 @@ public class CompraController {
         if (oUsuarioEntity == null) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
-            if (oUsuarioEntity.getTipousuario().getId() == 1 || oUsuarioEntity.getTipousuario().getId() == 2  ) {
+            if (oUsuarioEntity.getTipousuario().getId() == 1) {
                 if (oCompraEntity.getId() == null) {
                     return new ResponseEntity<CompraEntity>(oCompraRepository.save(oCompraEntity), HttpStatus.OK);
                 } else {
