@@ -63,7 +63,7 @@ public class ProductoEntity implements Serializable {
     private String nombre;
     private Integer existencias;
     private Double precio;
-    private String imagen;
+    private Long imagen;
     private Integer descuento;
     
     @ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.REFRESH})
@@ -123,11 +123,11 @@ public class ProductoEntity implements Serializable {
         this.precio = precio;
     }
 
-    public String getImagen() {
+    public Long getImagen() {
         return imagen;
     }
 
-    public void setImagen(String imagen) {
+    public void setImagen(Long imagen) {
         this.imagen = imagen;
     }
 

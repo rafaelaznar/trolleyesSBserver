@@ -331,7 +331,7 @@ public class FillService {
             Optional<TipoproductoEntity> optionalTipoproductoEntity = oTipoproductoRepository.findById(Long.valueOf(RandomHelper.getRandomInt(1, 100)));
             TipoproductoEntity oTipoproductoEntity = optionalTipoproductoEntity.get();  
             oProductoEntity.setTipoproducto(oTipoproductoEntity);                        
-            oProductoEntity.setImagen("no-product-image.png");
+            oProductoEntity.setImagen(1L);
             oProductoEntity.setPrecio(RandomHelper.getRadomDouble(1, 3000));
             oProductoRepository.save(oProductoEntity);
         }
