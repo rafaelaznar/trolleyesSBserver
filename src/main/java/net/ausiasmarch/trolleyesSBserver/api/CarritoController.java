@@ -161,31 +161,93 @@ public class CarritoController {
     
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
-        if (oCarritoRepository.existsById(id)) {
-            return new ResponseEntity<CarritoEntity>(oCarritoRepository.getOne(id), HttpStatus.OK);
+        
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        CarritoEntity oCarritoEntity = new CarritoEntity();
+
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
-            return new ResponseEntity<CarritoEntity>(oCarritoRepository.getOne(id), HttpStatus.NOT_FOUND);
+            if (oUsuarioEntity.getTipousuario().getId() == 1) {
+                if (oCarritoRepository.existsById(id)) {
+                    return new ResponseEntity<CarritoEntity>(oCarritoRepository.getOne(id), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<CarritoEntity>(oCarritoRepository.getOne(id), HttpStatus.NOT_FOUND);
+                }
+            } else {
+                if (oCarritoEntity.getUsuario().getId().equals(oUsuarioEntity.getId())) {
+                    return new ResponseEntity<CarritoEntity>(oCarritoRepository.getOne(id), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+                }
+            }
         }
     }
 
     @GetMapping("/count")
     public ResponseEntity<?> count() {
-        return new ResponseEntity<Long>(oCarritoRepository.count(), HttpStatus.OK);
-    }
+        
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        CarritoEntity oCarritoEntity = new CarritoEntity();
+       
+         if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        } else {
+            if (oUsuarioEntity.getTipousuario().getId() == 1) {
+                    return new ResponseEntity<Long>(oCarritoRepository.count(), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+                }
+            }
+        }
+
 
     @GetMapping("/all")
     public ResponseEntity<?> all() {
-        if (oCarritoRepository.count() <= 1000) {
-            return new ResponseEntity<List<CarritoEntity>>(oCarritoRepository.findAll(), HttpStatus.OK);
+        
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        CarritoEntity oCarritoEntity = new CarritoEntity();
+
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
-            return new ResponseEntity<>(null, HttpStatus.PAYLOAD_TOO_LARGE);
+            if (oUsuarioEntity.getTipousuario().getId() == 1) {
+                if (oCarritoRepository.count() <= 1000) {
+                    return new ResponseEntity<List<CarritoEntity>>(oCarritoRepository.findAll(), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(null, HttpStatus.PAYLOAD_TOO_LARGE);
+                }
+            } else {
+                if (oCarritoEntity.getUsuario().getId().equals(oUsuarioEntity.getId())) {
+                    return new ResponseEntity<List<CarritoEntity>>(oCarritoRepository.findAll(), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+                }
+            }
         }
     }
 
     @GetMapping("/page")
     public ResponseEntity<?> getPage(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable) {
+        
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        CarritoEntity oCarritoEntity = new CarritoEntity();
+
         Page<CarritoEntity> oPage = oCarritoRepository.findAll(oPageable);
-        return new ResponseEntity<Page<CarritoEntity>>(oPage, HttpStatus.OK);
+
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        } else {
+            if (oUsuarioEntity.getTipousuario().getId() == 1) {
+                return new ResponseEntity<Page<CarritoEntity>>(oPage, HttpStatus.OK);
+            } else {
+                if (oCarritoEntity.getUsuario().getId().equals(oUsuarioEntity.getId())) {
+                    return new ResponseEntity<Page<CarritoEntity>>(oPage, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+                }
+            }
+        }
     }
 
     @GetMapping("/page/producto/{id}")
