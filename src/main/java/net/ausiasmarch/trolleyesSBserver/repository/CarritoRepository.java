@@ -66,4 +66,7 @@ public interface CarritoRepository extends JpaRepository<CarritoEntity, Long> {
     Long deleteByUsuario(UsuarioEntity oUsuarioEntity);
 
     Long deleteByIdAndUsuario(Long id, UsuarioEntity oUsuarioEntity);
+        
+    CarritoEntity findByIdAndUsuario(Long idCarrito, UsuarioEntity oUsuarioEntity);            
+    
 }

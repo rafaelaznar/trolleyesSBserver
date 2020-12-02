@@ -2,11 +2,11 @@
  * Copyright (c) 2020
  *
  * by Rafael Angel Aznar Aparici (rafaaznar at gmail dot com) & 2020 DAW students
- * 
+ *
  * TROLLEYES: Free Open Source Shopping Site
  *
  *
- * Sources at:                https://github.com/rafaelaznar/trolleyesSBserver                            
+ * Sources at:                https://github.com/rafaelaznar/trolleyesSBserver
  * Database at:               https://github.com/rafaelaznar/trolleyesSBserver
  * Client at:                 https://github.com/rafaelaznar/TrolleyesAngularJSClient
  *
@@ -163,23 +163,29 @@ public class CarritoController {
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
 
         UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
-        CarritoEntity oCarritoEntity = new CarritoEntity();
 
         if (oUsuarioEntity == null) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-        } else {
+        } else { //si hay sesion
             if (oUsuarioEntity.getTipousuario().getId() == 1) {
                 if (oCarritoRepository.existsById(id)) {
                     return new ResponseEntity<CarritoEntity>(oCarritoRepository.getOne(id), HttpStatus.OK);
                 } else {
-                    return new ResponseEntity<CarritoEntity>(oCarritoRepository.getOne(id), HttpStatus.NOT_FOUND);
+                    return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
                 }
-            } else {
-                if (oCarritoEntity.getUsuario().getId().equals(oUsuarioEntity.getId())) {
-                    return new ResponseEntity<CarritoEntity>(oCarritoRepository.getOne(id), HttpStatus.OK);
+            } else { //es cliente
+                //return new ResponseEntity<CarritoEntity>(oCarritoRepository.findByIdAndUsuario(id, oUsuarioEntity), HttpStatus.OK);
+                CarritoEntity oCarritoEntity = oCarritoRepository.getOne(id);
+                if (oCarritoEntity != null) {
+                    if (oCarritoEntity.getUsuario().getId().equals(oUsuarioEntity.getId())) {
+                        return new ResponseEntity<CarritoEntity>(oCarritoEntity, HttpStatus.OK);
+                    } else {
+                        return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+                    }
                 } else {
-                    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+                    return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
                 }
+
             }
         }
     }
@@ -228,11 +234,11 @@ public class CarritoController {
 
     @GetMapping("/page")
     public ResponseEntity<?> getPage(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable) {
-        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");      
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
         if (oUsuarioEntity == null) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
-            if (oUsuarioEntity.getTipousuario().getId() == 1) {                
+            if (oUsuarioEntity.getTipousuario().getId() == 1) {
                 return new ResponseEntity<Page<CarritoEntity>>(oCarritoRepository.findAll(oPageable), HttpStatus.OK);
             } else { //ver sólo los items del cliente en sesion
                 return new ResponseEntity<Page<CarritoEntity>>(oCarritoRepository.findByUsuario(oUsuarioEntity, oPageable), HttpStatus.OK);
