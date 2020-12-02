@@ -226,14 +226,13 @@ public class CompraController {
 
         } else {
 
-            if (oUsuarioEntity.getTipousuario().getId() == 1) { //administrador
+            if (oUsuarioEntity.getTipousuario().getId() == 1) { //Es administrador
 
-                Page<CompraEntity> oPage = oCompraRepository.findAll(oPageable);
-                return new ResponseEntity<Page<CompraEntity>>(oPage, HttpStatus.OK);
+                return new ResponseEntity<Page<CompraEntity>>(oCompraRepository.findAll(oPageable), HttpStatus.OK);
 
-            } else {  //cliente
+            } else {  //Es cliente (puede ver sus propias compras)
 
-                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<Page<CompraEntity>>(oCompraRepository.findByCompraXIdUsuario(oUsuarioEntity.getId(), oPageable), HttpStatus.OK);
             }
         }
 
