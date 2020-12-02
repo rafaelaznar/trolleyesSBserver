@@ -163,8 +163,7 @@ public class CarritoController {
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
 
         UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
-        CarritoEntity oCarritoEntity = new CarritoEntity();
-
+    
         if (oUsuarioEntity == null) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
@@ -175,28 +174,22 @@ public class CarritoController {
                     return new ResponseEntity<CarritoEntity>(oCarritoRepository.getOne(id), HttpStatus.NOT_FOUND);
                 }
             } else {
-                if (oCarritoEntity.getUsuario().getId().equals(oUsuarioEntity.getId())) {
-                    return new ResponseEntity<CarritoEntity>(oCarritoRepository.getOne(id), HttpStatus.OK);
-                } else {
-                    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+                 return new ResponseEntity<CarritoEntity>(oCarritoRepository.getOne(id), HttpStatus.OK);                   
                 }
             }
         }
-    }
-
+    
     @GetMapping("/count")
     public ResponseEntity<?> count() {
 
-        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
-        CarritoEntity oCarritoEntity = new CarritoEntity();
-
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");    
         if (oUsuarioEntity == null) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
             if (oUsuarioEntity.getTipousuario().getId() == 1) {
                 return new ResponseEntity<Long>(oCarritoRepository.count(), HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<Long>(oCarritoRepository.count(), HttpStatus.OK);
             }
         }
     }
@@ -204,9 +197,7 @@ public class CarritoController {
     @GetMapping("/all")
     public ResponseEntity<?> all() {
 
-        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
-        CarritoEntity oCarritoEntity = new CarritoEntity();
-
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");  
         if (oUsuarioEntity == null) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
@@ -216,12 +207,8 @@ public class CarritoController {
                 } else {
                     return new ResponseEntity<>(null, HttpStatus.PAYLOAD_TOO_LARGE);
                 }
-            } else {
-                if (oCarritoEntity.getUsuario().getId().equals(oUsuarioEntity.getId())) {
-                    return new ResponseEntity<List<CarritoEntity>>(oCarritoRepository.findAll(), HttpStatus.OK);
-                } else {
-                    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-                }
+            } else {                
+                    return new ResponseEntity<List<CarritoEntity>>(oCarritoRepository.findAllByUsuario(oUsuarioEntity), HttpStatus.OK);                                     
             }
         }
     }
