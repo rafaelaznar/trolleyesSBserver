@@ -52,17 +52,14 @@ public interface CompraRepository extends JpaRepository<CompraEntity, Long> {
     Page<CompraEntity> findByProducto(ProductoEntity oProductoEntity, Pageable oPageable);
 
 //    public Page<CompraEntity> findById_producto(Long id, Pageable oPageable);
-    
     @Query(value = "SELECT * FROM compra c WHERE c.id_factura = :id_factura", nativeQuery = true)
     Page<CompraEntity> findByCompraXFactura(Long id_factura, Pageable pageable);
-    
+
     Page<CompraEntity> findByFactura(FacturaEntity oFacturaEntity, Pageable oPageable);
-    
+
     @Query(value = "SELECT * FROM compra where id_factura IN (SELECT id FROM factura WHERE id_usuario = :id_usuario)", nativeQuery = true)
-    Page<CompraEntity> findByCompraXIdUsuario(Long id_usuario, Pageable pageable);
+    Page<CompraEntity> findByCompraXIdUsuario(Long id_usuario, Pageable pageable);    
 
-    List<CompraEntity> findAllByFacturaAndUsuario(FacturaEntity oFacturaEntity,UsuarioEntity oUsuarioEntity);
+    List<CompraEntity> findByFactura(FacturaEntity oFacturaEntity);
 
-    List<CompraEntity>  findAllByFactura(FacturaEntity oFacturaEntity);
-    
 }
