@@ -95,7 +95,7 @@ public class CompraController {
                 } else {
                     return new ResponseEntity<CompraEntity>(oCompraRepository.getOne(id), HttpStatus.NOT_FOUND);
                 }
-            }else{
+            } else {
                 if (id.equals(oUsuarioEntity.getId())) {  //los datos pedidos por el cliente son sus propios datos
                     return new ResponseEntity<CompraEntity>(oCompraRepository.getOne(id), HttpStatus.OK);
                 } else {
@@ -143,21 +143,21 @@ public class CompraController {
 
     @PostMapping("/fill/{amount}")
     public ResponseEntity<?> fill(@PathVariable(value = "amount") Long amount) {
-       UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");     
-            if (oUsuarioEntity == null) {
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        if (oUsuarioEntity == null) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-            }else{
-                 if (oUsuarioEntity.getTipousuario().getId() == 1) {
-               return new ResponseEntity<Long>(oFillService.compraFill(amount), HttpStatus.OK);
-            }else{
-                    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-                }
-            }                         
+        } else {
+            if (oUsuarioEntity.getTipousuario().getId() == 1) {
+                return new ResponseEntity<Long>(oFillService.compraFill(amount), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }
+        }
     }
 
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestBody CompraEntity oCompraEntity) {
-        
+
         UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
         if (oUsuarioEntity == null) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
@@ -176,9 +176,9 @@ public class CompraController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody CompraEntity oCompraEntity) {
-        
+
         UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
-        
+
         if (oUsuarioEntity == null) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
@@ -262,6 +262,41 @@ public class CompraController {
             return new ResponseEntity<Page<CompraEntity>>(oPage, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+
+    }
+
+    @GetMapping("/all/factura/{id}")
+    public ResponseEntity<?> getAllXFactura(@PathVariable(value = "id") Long id) {
+
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        Boolean canGet = false;
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+
+        } else {
+
+            if (oUsuarioEntity.getTipousuario().getId() == 1) { //Es administrador
+                if (oFacturaRepository.existsById(id)) {
+                    FacturaEntity oFacturaEntity = oFacturaRepository.getOne(id);
+                    List<CompraEntity> oCompraList = oCompraRepository.findAllByFactura(oFacturaEntity);
+                    return new ResponseEntity<List<CompraEntity>>(oCompraList, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+                }
+
+            } else { //es cliente
+//-----------   OJO pendiente finde clase!!!!
+                if (oFacturaRepository.existsById(id)) {
+                    FacturaEntity oFacturaEntity = oFacturaRepository.getOne(id);
+                    List<CompraEntity> oPage = oCompraRepository.findAllByFacturaAndUsuario(oFacturaEntity, oUsuarioEntity);
+                    return new ResponseEntity<List<CompraEntity>>(oPage, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(null, HttpStatus.OK);
+                }
+
+            }
+
         }
 
     }
