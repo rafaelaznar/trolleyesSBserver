@@ -87,11 +87,21 @@ public class FacturaController {
                     return new ResponseEntity<FacturaEntity>(oFacturaRepository.getOne(id), HttpStatus.NOT_FOUND);
                 }
             } else {  //cliente
-                if (oFacturaEntity.getUsuario().getId().equals(oUsuarioEntity.getId())) {  //los datos pedidos por el cliente son sus propios datos?
-                    return new ResponseEntity<FacturaEntity>(oFacturaRepository.getOne(id), HttpStatus.OK);
-                } else {
-                    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-                }
+                 oFacturaEntity = oFacturaRepository.getOne(id);
+                 if(oFacturaEntity != null){
+                     if(oFacturaEntity.getUsuario().getId().equals(oUsuarioEntity.getId())){
+                         return new ResponseEntity<FacturaEntity>(oFacturaRepository.getOne(id), HttpStatus.OK);
+                     }else{
+                         return new ResponseEntity<>(null,HttpStatus.UNAUTHORIZED);
+                     }
+                 }else{
+                     return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+                 }
+//                if (oFacturaEntity.getUsuario().getId().equals(oUsuarioEntity.getId())) {  //los datos pedidos por el cliente son sus propios datos?
+//                    return new ResponseEntity<FacturaEntity>(oFacturaRepository.getOne(id), HttpStatus.OK);
+//                } else {
+//                    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+//                }
             }
         }
     }
@@ -191,7 +201,7 @@ public class FacturaController {
     public ResponseEntity<?> getPage(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable) {
 
         UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
-        FacturaEntity oFacturaEntity = new FacturaEntity();
+//        FacturaEntity oFacturaEntity = new FacturaEntity();
 
         Page<FacturaEntity> oPage = oFacturaRepository.findAll(oPageable);
         if (oUsuarioEntity == null) {
@@ -200,11 +210,12 @@ public class FacturaController {
             if (oUsuarioEntity.getTipousuario().getId() == 1) { //administrador
                 return new ResponseEntity<Page<FacturaEntity>>(oPage, HttpStatus.OK);
             } else {  //cliente
-                if (oFacturaEntity.getUsuario().getId().equals(oUsuarioEntity.getId())) {  //los datos pedidos por el cliente son sus propios datos?
-                    return new ResponseEntity<Page<FacturaEntity>>(oPage, HttpStatus.OK);
-                } else {
-                    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-                }
+//                if (oFacturaEntity2.getUsuario().getId().equals(oUsuarioEntity.getId())) {  //los datos pedidos por el cliente son sus propios datos?
+//                    return new ResponseEntity<Page<FacturaEntity>>(oPage, HttpStatus.OK);
+                    return new ResponseEntity<Page<FacturaEntity>>(oFacturaRepository.findByFacturaXUsuario(oUsuarioEntity.getId(), oPageable), HttpStatus.OK);
+//                } else {
+//                    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+//                }
             }
         }
     }
