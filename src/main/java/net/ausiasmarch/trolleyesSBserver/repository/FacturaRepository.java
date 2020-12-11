@@ -32,6 +32,7 @@
  */
 package net.ausiasmarch.trolleyesSBserver.repository;
 
+import java.util.List;
 import net.ausiasmarch.trolleyesSBserver.entity.FacturaEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.UsuarioEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -47,5 +48,8 @@ public interface FacturaRepository extends JpaRepository<FacturaEntity, Long> {
     Page<FacturaEntity> findByFacturaXUsuario(Long id_usuario, Pageable pageable);
 
     Page<FacturaEntity> findByUsuario(UsuarioEntity oUsuarioEntity, Pageable oPageable);
+    
+    List<FacturaEntity> findByUsuario(UsuarioEntity oUsuarioEntity);
+    
     
 }
