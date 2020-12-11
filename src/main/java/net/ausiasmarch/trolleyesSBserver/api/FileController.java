@@ -53,18 +53,17 @@ public class FileController {
                 baos.close();
                 //--
                 img2.setFile(new javax.sql.rowset.serial.SerialBlob(imageInByte));
-                oFileRepository.save(img2);
+                return new ResponseEntity<Long>(oFileRepository.save(img2).getId(), HttpStatus.OK);
             } else {
                 FileEntity img = new FileEntity(file.getOriginalFilename(), file.getContentType());
-                img.setFile(new javax.sql.rowset.serial.SerialBlob(file.getBytes()));
-                oFileRepository.save(img);
+                img.setFile(new javax.sql.rowset.serial.SerialBlob(file.getBytes()));                
+                return new ResponseEntity<Long>(oFileRepository.save(img).getId(), HttpStatus.OK);
             }
         } catch (IOException ex) {
             return new ResponseEntity<Boolean>(false, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (SQLException ex) {
             return new ResponseEntity<Boolean>(false, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+        }        
     }
 
     public BufferedImage createThumb(BufferedImage in, int w, int h) {
