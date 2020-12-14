@@ -32,6 +32,7 @@
  */
 package net.ausiasmarch.trolleyesSBserver.api;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpSession;
@@ -249,14 +250,29 @@ public class FacturaController {
         }
     }
 
-    @GetMapping("/allxusuario/10/{id}/{fini}/{ffin}")
-    public ResponseEntity<?> getAllXUsuario(@PathVariable(value = "id") Long id,
-            @PathVariable(value = "fini") @DateTimeFormat(pattern = "dd-MM-yyyy") Date fini,
-            @PathVariable(value = "ffin") @DateTimeFormat(pattern = "dd-MM-yyyy") Date ffin) {
+        @GetMapping("/allxusuario/10/{id}")
+    public ResponseEntity<?> getAllXUsuario10(@PathVariable(value = "id") Long id){
         if (oUsuarioRepository.existsById(id)) {
             UsuarioEntity oUsuarioEntity = oUsuarioRepository.getOne(id);
             if (oUsuarioEntity.getTipousuario().getId() > 1) {
-                List<FacturaEntity> oPage = oFacturaRepository.findTop10ByUsuarioAndFechaBetweenOrderByFechaDesc(oUsuarioEntity, fini, ffin);
+                List<FacturaEntity> oPage = oFacturaRepository.findTop10ByUsuario(oUsuarioEntity);
+                return new ResponseEntity<List<FacturaEntity>>(oPage, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+    }
+    
+    @GetMapping("/allxusuario/10/{id}/{fini}/{ffin}")
+    public ResponseEntity<?> getAllXUsuario10(@PathVariable(value = "id") Long id,
+            @PathVariable(value = "fini") @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDateTime fini,
+            @PathVariable(value = "ffin") @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDateTime ffin) {
+        if (oUsuarioRepository.existsById(id)) {
+            UsuarioEntity oUsuarioEntity = oUsuarioRepository.getOne(id);
+            if (oUsuarioEntity.getTipousuario().getId() > 1) {
+                List<FacturaEntity> oPage = oFacturaRepository.findTop10ByUsuarioAndFechaGreaterThanEqualAndFechaLessThanEqual(oUsuarioEntity, fini, ffin);
                 return new ResponseEntity<List<FacturaEntity>>(oPage, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
