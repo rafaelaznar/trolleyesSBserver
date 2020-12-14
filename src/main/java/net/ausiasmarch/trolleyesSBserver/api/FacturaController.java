@@ -32,6 +32,7 @@
  */
 package net.ausiasmarch.trolleyesSBserver.api;
 
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import net.ausiasmarch.trolleyesSBserver.entity.FacturaEntity;
@@ -44,6 +45,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -233,13 +235,30 @@ public class FacturaController {
     }
 
     @GetMapping("/allxusuario/{id}")
-    public ResponseEntity<?> getAllXUsuario(@PathVariable(value = "id") Long id) {        
+    public ResponseEntity<?> getAllXUsuario(@PathVariable(value = "id") Long id) {
         if (oUsuarioRepository.existsById(id)) {
             UsuarioEntity oUsuarioEntity = oUsuarioRepository.getOne(id);
             if (oUsuarioEntity.getTipousuario().getId() > 1) {
                 List<FacturaEntity> oPage = oFacturaRepository.findByUsuario(oUsuarioEntity);
                 return new ResponseEntity<List<FacturaEntity>>(oPage, HttpStatus.OK);
-            } else{
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/allxusuario/10/{id}/{fini}/{ffin}")
+    public ResponseEntity<?> getAllXUsuario(@PathVariable(value = "id") Long id,
+            @PathVariable(value = "fini") @DateTimeFormat(pattern = "dd-MM-yyyy") Date fini,
+            @PathVariable(value = "ffin") @DateTimeFormat(pattern = "dd-MM-yyyy") Date ffin) {
+        if (oUsuarioRepository.existsById(id)) {
+            UsuarioEntity oUsuarioEntity = oUsuarioRepository.getOne(id);
+            if (oUsuarioEntity.getTipousuario().getId() > 1) {
+                List<FacturaEntity> oPage = oFacturaRepository.findTop10ByUsuarioAndFechaBetweenOrderByFechaDesc(oUsuarioEntity, fini, ffin);
+                return new ResponseEntity<List<FacturaEntity>>(oPage, HttpStatus.OK);
+            } else {
                 return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             }
         } else {
