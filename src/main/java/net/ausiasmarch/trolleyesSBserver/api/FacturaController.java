@@ -2,11 +2,11 @@
  * Copyright (c) 2020
  *
  * by Rafael Angel Aznar Aparici (rafaaznar at gmail dot com) & 2020 DAW students
- * 
+ *
  * TROLLEYES: Free Open Source Shopping Site
  *
  *
- * Sources at:                https://github.com/rafaelaznar/trolleyesSBserver                            
+ * Sources at:                https://github.com/rafaelaznar/trolleyesSBserver
  * Database at:               https://github.com/rafaelaznar/trolleyesSBserver
  * Client at:                 https://github.com/rafaelaznar/TrolleyesAngularJSClient
  *
@@ -32,9 +32,16 @@
  */
 package net.ausiasmarch.trolleyesSBserver.api;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpSession;
 import net.ausiasmarch.trolleyesSBserver.entity.FacturaEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.UsuarioEntity;
@@ -250,38 +257,6 @@ public class FacturaController {
         }
     }
 
-        @GetMapping("/allxusuario/10/{id}")
-    public ResponseEntity<?> getAllXUsuario10(@PathVariable(value = "id") Long id){
-        if (oUsuarioRepository.existsById(id)) {
-            UsuarioEntity oUsuarioEntity = oUsuarioRepository.getOne(id);
-            if (oUsuarioEntity.getTipousuario().getId() > 1) {
-                List<FacturaEntity> oPage = oFacturaRepository.findTop10ByUsuario(oUsuarioEntity);
-                return new ResponseEntity<List<FacturaEntity>>(oPage, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-            }
-        } else {
-            return new ResponseEntity<>(null, HttpStatus.OK);
-        }
-    }
-    
-    @GetMapping("/allxusuario/10/{id}/{fini}/{ffin}")
-    public ResponseEntity<?> getAllXUsuario10(@PathVariable(value = "id") Long id,
-            @PathVariable(value = "fini") @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDateTime fini,
-            @PathVariable(value = "ffin") @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDateTime ffin) {
-        if (oUsuarioRepository.existsById(id)) {
-            UsuarioEntity oUsuarioEntity = oUsuarioRepository.getOne(id);
-            if (oUsuarioEntity.getTipousuario().getId() > 1) {
-                List<FacturaEntity> oPage = oFacturaRepository.findTop10ByUsuarioAndFechaGreaterThanEqualAndFechaLessThanEqual(oUsuarioEntity, fini, ffin);
-                return new ResponseEntity<List<FacturaEntity>>(oPage, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-            }
-        } else {
-            return new ResponseEntity<>(null, HttpStatus.OK);
-        }
-    }
-
     @PostMapping("/fill/{amount}")
     public ResponseEntity<?> fill(@PathVariable(value = "amount") Long amount) {
         UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
@@ -295,4 +270,91 @@ public class FacturaController {
             }
         }
     }
+
+    //-----INFORMES---------
+    
+    @GetMapping("/allxusuario/10/{id}")
+    public ResponseEntity<?> getAllXUsuario10(@PathVariable(value = "id") Long id) {
+        if (oUsuarioRepository.existsById(id)) {
+            UsuarioEntity oUsuarioEntity = oUsuarioRepository.getOne(id);
+            if (oUsuarioEntity.getTipousuario().getId() > 1) {
+                List<FacturaEntity> oPage = oFacturaRepository.findTop10ByUsuarioOrderByFechaDesc(oUsuarioEntity);
+                return new ResponseEntity<List<FacturaEntity>>(oPage, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/allxusuario/10/{id}/{fini}/{ffin}")
+    public ResponseEntity<?> getAllXUsuario10(@PathVariable(value = "id") Long id,
+            @PathVariable(value = "fini") String fini,
+            @PathVariable(value = "ffin") String ffin
+    ) {
+
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDateTime fromDate = LocalDate.parse(fini, fmt).atStartOfDay();
+        LocalDateTime endDate = LocalDate.parse(ffin, fmt).atStartOfDay();
+
+        if (oUsuarioRepository.existsById(id)) {
+            UsuarioEntity oUsuarioEntity = oUsuarioRepository.getOne(id);
+            if (oUsuarioEntity.getTipousuario().getId() > 1) {
+                List<FacturaEntity> oPage = oFacturaRepository.findTop10ByUsuarioAndFechaGreaterThanEqualAndFechaLessThanEqualOrderByFechaDesc(oUsuarioEntity, fromDate, endDate);
+                return new ResponseEntity<List<FacturaEntity>>(oPage, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/allxusuario/100/{id}/{fini}/{ffin}")
+    public ResponseEntity<?> getAllXUsuario100(@PathVariable(value = "id") Long id,
+            @PathVariable(value = "fini") String fini,
+            @PathVariable(value = "ffin") String ffin
+    ) {
+
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDateTime fromDate = LocalDate.parse(fini, fmt).atStartOfDay();
+        LocalDateTime endDate = LocalDate.parse(ffin, fmt).atStartOfDay();
+
+        if (oUsuarioRepository.existsById(id)) {
+            UsuarioEntity oUsuarioEntity = oUsuarioRepository.getOne(id);
+            if (oUsuarioEntity.getTipousuario().getId() > 1) {
+                List<FacturaEntity> oPage = oFacturaRepository.findTop100ByUsuarioAndFechaGreaterThanEqualAndFechaLessThanEqualOrderByFechaDesc(oUsuarioEntity, fromDate, endDate);
+                return new ResponseEntity<List<FacturaEntity>>(oPage, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/allxusuario/1000/{id}/{fini}/{ffin}")
+    public ResponseEntity<?> getAllXUsuario1000(@PathVariable(value = "id") Long id,
+            @PathVariable(value = "fini") String fini,
+            @PathVariable(value = "ffin") String ffin
+    ) {
+
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDateTime fromDate = LocalDate.parse(fini, fmt).atStartOfDay();
+        LocalDateTime endDate = LocalDate.parse(ffin, fmt).atStartOfDay();
+
+        if (oUsuarioRepository.existsById(id)) {
+            UsuarioEntity oUsuarioEntity = oUsuarioRepository.getOne(id);
+            if (oUsuarioEntity.getTipousuario().getId() > 1) {
+                List<FacturaEntity> oPage = oFacturaRepository.findTop1000ByUsuarioAndFechaGreaterThanEqualAndFechaLessThanEqualOrderByFechaDesc(oUsuarioEntity, fromDate, endDate);
+                return new ResponseEntity<List<FacturaEntity>>(oPage, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+    }
+
 }

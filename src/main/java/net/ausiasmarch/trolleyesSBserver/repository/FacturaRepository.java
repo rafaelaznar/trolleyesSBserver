@@ -32,7 +32,9 @@
  */
 package net.ausiasmarch.trolleyesSBserver.repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import net.ausiasmarch.trolleyesSBserver.entity.FacturaEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.UsuarioEntity;
@@ -51,9 +53,11 @@ public interface FacturaRepository extends JpaRepository<FacturaEntity, Long> {
     Page<FacturaEntity> findByUsuario(UsuarioEntity oUsuarioEntity, Pageable oPageable);
     
     List<FacturaEntity> findByUsuario(UsuarioEntity oUsuarioEntity);
-    List<FacturaEntity> findTop10ByUsuario(UsuarioEntity oUsuarioEntity);
+    List<FacturaEntity> findTop10ByUsuarioOrderByFechaDesc(UsuarioEntity oUsuarioEntity);
     List<FacturaEntity> findTop10ByUsuarioAndFechaBetweenOrderByFechaDesc(UsuarioEntity oUsuarioEntity,LocalDateTime fini,LocalDateTime ffin);
-    List<FacturaEntity> findTop10ByUsuarioAndFechaGreaterThanEqualAndFechaLessThanEqual(UsuarioEntity oUsuarioEntity,LocalDateTime fini,LocalDateTime ffin);
+    List<FacturaEntity> findTop10ByUsuarioAndFechaGreaterThanEqualAndFechaLessThanEqualOrderByFechaDesc(UsuarioEntity oUsuarioEntity,LocalDateTime fini,LocalDateTime ffin);
+    List<FacturaEntity> findTop100ByUsuarioAndFechaGreaterThanEqualAndFechaLessThanEqualOrderByFechaDesc(UsuarioEntity oUsuarioEntity,LocalDateTime fini,LocalDateTime ffin);
+    List<FacturaEntity> findTop1000ByUsuarioAndFechaGreaterThanEqualAndFechaLessThanEqualOrderByFechaDesc(UsuarioEntity oUsuarioEntity,LocalDateTime fini,LocalDateTime ffin);
     
     
 }
