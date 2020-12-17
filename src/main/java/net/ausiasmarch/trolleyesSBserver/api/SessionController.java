@@ -2,11 +2,11 @@
  * Copyright (c) 2020
  *
  * by Rafael Angel Aznar Aparici (rafaaznar at gmail dot com) & 2020 DAW students
- * 
+ *
  * TROLLEYES: Free Open Source Shopping Site
  *
  *
- * Sources at:                https://github.com/rafaelaznar/trolleyesSBserver                            
+ * Sources at:                https://github.com/rafaelaznar/trolleyesSBserver
  * Database at:               https://github.com/rafaelaznar/trolleyesSBserver
  * Client at:                 https://github.com/rafaelaznar/TrolleyesAngularJSClient
  *
@@ -59,6 +59,7 @@ public class SessionController {
     @GetMapping("/")
     public ResponseEntity<?> check() {
         UsuarioEntity oSessionUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        oSessionUsuarioEntity = oUsuarioRepository.findById(oSessionUsuarioEntity.getId()).get();
         if (oSessionUsuarioEntity == null) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
@@ -70,7 +71,7 @@ public class SessionController {
     public ResponseEntity<?> login(@RequestBody UsuarioBean oUsuarioBean) {
         UsuarioEntity oUsuarioEntity = oUsuarioRepository.findByLoginAndPassword(oUsuarioBean.getLogin(), oUsuarioBean.getPassword().toLowerCase());
         if (oUsuarioEntity != null) {
-            oHttpSession.setAttribute("usuario", oUsuarioEntity);            
+            oHttpSession.setAttribute("usuario", oUsuarioEntity);
             return new ResponseEntity<UsuarioEntity>(oUsuarioEntity, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
