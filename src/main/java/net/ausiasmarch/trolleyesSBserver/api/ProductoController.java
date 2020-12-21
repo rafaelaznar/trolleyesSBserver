@@ -33,6 +33,7 @@
 package net.ausiasmarch.trolleyesSBserver.api;
 
 import java.util.List;
+import java.util.Optional;
 import javax.servlet.http.HttpSession;
 import net.ausiasmarch.trolleyesSBserver.entity.ProductoEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.TipoproductoEntity;
@@ -55,6 +56,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -66,7 +68,7 @@ public class ProductoController {
 
     @Autowired
     ProductoRepository oProductoRepository;
-    
+
     @Autowired
     TipoproductoRepository oTipoproductoRepository;
 
@@ -138,16 +140,16 @@ public class ProductoController {
 
     @PostMapping("/fill/{amount}")
     public ResponseEntity<?> fill(@PathVariable(value = "amount") Long amount) {
-         UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");     
-            if (oUsuarioEntity == null) {
-                 return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-            }else{
-                 if (oUsuarioEntity.getTipousuario().getId() == 1) {
-                    return new ResponseEntity<Long>(oFillService.productoFill(amount), HttpStatus.OK);
-                }else{
-                    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-                }
-            }       
+        UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        if (oUsuarioEntity == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        } else {
+            if (oUsuarioEntity.getTipousuario().getId() == 1) {
+                return new ResponseEntity<Long>(oFillService.productoFill(amount), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -173,13 +175,17 @@ public class ProductoController {
     }
 
     @GetMapping("/page")
-    public ResponseEntity<?> getPage(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable
+    public ResponseEntity<?> getPage(@RequestParam("filter") Optional<String> strSearch, @PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable
     ) {
-
-        Page<ProductoEntity> oPage = oProductoRepository.findAll(oPageable);
+        Page<ProductoEntity> oPage = null;
+        if (strSearch.isPresent()) {
+            oPage = oProductoRepository.findByCodigoContainingIgnoreCaseOrNombreContainingIgnoreCaseOrTipoproductoNombreContainingIgnoreCase(strSearch.get(), strSearch.get(), strSearch.get(), oPageable);
+        } else {
+            oPage = oProductoRepository.findAll(oPageable);
+        }
         return new ResponseEntity<Page<ProductoEntity>>(oPage, HttpStatus.OK);
     }
-    
+
     @GetMapping("/page/tipoproducto/{id}")
     public ResponseEntity<?> getPageXTipoproducto(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable, @PathVariable(value = "id") Long id) {
 

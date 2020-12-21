@@ -257,6 +257,7 @@ public class FacturaController {
         }
     }
 
+
     @PostMapping("/fill/{amount}")
     public ResponseEntity<?> fill(@PathVariable(value = "amount") Long amount) {
         UsuarioEntity oUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
@@ -271,6 +272,21 @@ public class FacturaController {
         }
     }
 
+
+    @GetMapping("/page/usuario/{id}")
+    public ResponseEntity<?> getPageXusuario(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable, @PathVariable(value = "id") Long id) {
+
+        if (oUsuarioRepository.existsById(id)) {
+            UsuarioEntity oUsuarioEntity = oUsuarioRepository.getOne(id);
+            Page<FacturaEntity> oPage = oFacturaRepository.findByUsuario(oUsuarioEntity, oPageable);
+            return new ResponseEntity<Page<FacturaEntity>>(oPage, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+
+    }
+
+  
     //-----INFORMES---------
     
     @GetMapping("/allxusuario/10/{id}")
@@ -356,5 +372,6 @@ public class FacturaController {
             return new ResponseEntity<>(null, HttpStatus.OK);
         }
     }
+
 
 }
