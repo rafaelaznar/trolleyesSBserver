@@ -32,6 +32,7 @@
  */
 package net.ausiasmarch.trolleyesSBserver.repository;
 
+import java.util.List;
 import net.ausiasmarch.trolleyesSBserver.entity.TipousuarioEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.UsuarioEntity;
 import org.springframework.data.domain.Page;
@@ -44,9 +45,22 @@ import org.springframework.stereotype.Repository;
 public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Long> {
 
     UsuarioEntity findByLoginAndPassword(String login, String password);
-    
+
     @Query(value = "SELECT * FROM usuario u WHERE c.id_tipousuario = :id_tipousuario", nativeQuery = true)
     Page<UsuarioEntity> findByUsuarioXTipousuario(Long id_tipousuario, Pageable pageable);
 
     Page<UsuarioEntity> findByTipousuario(TipousuarioEntity oTipousuarioEntity, Pageable oPageable);
+
+    List<UsuarioEntity> findTop10ByOrderByDescuentoDesc();
+
+    List<UsuarioEntity> findTop100ByOrderByDescuentoDesc();
+
+    List<UsuarioEntity> findTop1000ByOrderByDescuentoDesc();
+
+    List<UsuarioEntity> findTop10ByOrderByDescuentoAsc();
+
+    List<UsuarioEntity> findTop100ByOrderByDescuentoAsc();
+
+    List<UsuarioEntity> findTop1000ByOrderByDescuentoAsc();
+
 }
