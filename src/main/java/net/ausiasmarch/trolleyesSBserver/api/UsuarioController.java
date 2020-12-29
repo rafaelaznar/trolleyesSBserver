@@ -127,6 +127,8 @@ public class UsuarioController {
             if (oUsuarioEntity.getTipousuario().getId() == 1) {
                 if (oNewUsuarioEntity.getId() == null) {
                     oNewUsuarioEntity.setPassword("da8ab09ab4889c6208116a675cad0b13e335943bd7fc418782d054b32fdfba04");
+                    oNewUsuarioEntity.setActivo(false);
+                    oNewUsuarioEntity.setValidado(false);
                     return new ResponseEntity<UsuarioEntity>(oUsuarioRepository.save(oNewUsuarioEntity), HttpStatus.OK);
                 } else {
                     return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
