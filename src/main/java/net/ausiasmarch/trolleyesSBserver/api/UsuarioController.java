@@ -37,6 +37,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpSession;
 import net.ausiasmarch.trolleyesSBserver.entity.TipousuarioEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.UsuarioEntity;
+import net.ausiasmarch.trolleyesSBserver.helper.RandomHelper;
 import net.ausiasmarch.trolleyesSBserver.repository.TipousuarioRepository;
 import net.ausiasmarch.trolleyesSBserver.repository.UsuarioRepository;
 import net.ausiasmarch.trolleyesSBserver.service.FillService;
@@ -75,18 +76,18 @@ public class UsuarioController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
-        UsuarioEntity oUsuarioEntitySession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
-        if (oUsuarioEntitySession == null) {
+        UsuarioEntity oUsuarioEntityFromSession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        if (oUsuarioEntityFromSession == null) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
-            if (oUsuarioEntitySession.getTipousuario().getId() == 1) { //administrador
+            if (oUsuarioEntityFromSession.getTipousuario().getId() == 1) { //administrador
                 if (oUsuarioRepository.existsById(id)) {
                     return new ResponseEntity<UsuarioEntity>(oUsuarioRepository.getOne(id), HttpStatus.OK);
                 } else {
                     return new ResponseEntity<UsuarioEntity>(oUsuarioRepository.getOne(id), HttpStatus.NOT_FOUND);
                 }
             } else {  //cliente
-                if (id.equals(oUsuarioEntitySession.getId())) {  //los datos pedidos por el cliente son sus propios datos?
+                if (id.equals(oUsuarioEntityFromSession.getId())) {  //los datos pedidos por el cliente son sus propios datos?
                     return new ResponseEntity<UsuarioEntity>(oUsuarioRepository.getOne(id), HttpStatus.OK);
                 } else {
                     return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
@@ -98,11 +99,11 @@ public class UsuarioController {
 
     @GetMapping("/all")
     public ResponseEntity<?> get() {
-        UsuarioEntity oUsuarioEntitySession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
-        if (oUsuarioEntitySession == null) {
+        UsuarioEntity oUsuarioEntityFromSession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        if (oUsuarioEntityFromSession == null) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
-            if (oUsuarioEntitySession.getTipousuario().getId() == 1) {
+            if (oUsuarioEntityFromSession.getTipousuario().getId() == 1) {
                 if (oUsuarioRepository.count() <= 1000) {
                     return new ResponseEntity<List<UsuarioEntity>>(oUsuarioRepository.findAll(), HttpStatus.OK);
                 } else {
@@ -116,15 +117,21 @@ public class UsuarioController {
 
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestBody UsuarioEntity oUsuarioEntityFromRequest) {
-        UsuarioEntity oUsuarioEntitySession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
-        if (oUsuarioEntitySession == null) {
+        UsuarioEntity oUsuarioEntityFromSession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        if (oUsuarioEntityFromSession == null) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
-            if (oUsuarioEntitySession.getTipousuario().getId() == 1) {
+            if (oUsuarioEntityFromSession.getTipousuario().getId() == 1) {
                 oUsuarioEntityFromRequest.setId(null);
-                oUsuarioEntityFromRequest.setPassword("da8ab09ab4889c6208116a675cad0b13e335943bd7fc418782d054b32fdfba04"); //trolleyes
+                if (oUsuarioEntityFromRequest.getPassword() == null) {
+                    oUsuarioEntityFromRequest.setPassword("da8ab09ab4889c6208116a675cad0b13e335943bd7fc418782d054b32fdfba04"); //trolleyes
+                }
+                oUsuarioEntityFromRequest.setToken(RandomHelper.getRandomHexString(20));
                 oUsuarioEntityFromRequest.setActivo(false);
                 oUsuarioEntityFromRequest.setValidado(false);
+                if (oUsuarioEntityFromRequest.getDescuento() == null) {
+                    oUsuarioEntityFromRequest.setDescuento(0);
+                }
                 return new ResponseEntity<UsuarioEntity>(oUsuarioRepository.save(oUsuarioEntityFromRequest), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
@@ -134,11 +141,11 @@ public class UsuarioController {
 
     @GetMapping("/count")
     public ResponseEntity<?> count() {
-        UsuarioEntity oUsuarioEntitySession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
-        if (oUsuarioEntitySession == null) {
+        UsuarioEntity oUsuarioEntityFromSession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        if (oUsuarioEntityFromSession == null) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
-            if (oUsuarioEntitySession.getTipousuario().getId() == 1) { //administrador
+            if (oUsuarioEntityFromSession.getTipousuario().getId() == 1) { //administrador
                 return new ResponseEntity<Long>(oUsuarioRepository.count(), HttpStatus.OK);
             } else {  //cliente
                 return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
@@ -148,11 +155,11 @@ public class UsuarioController {
 
     @PostMapping("/fill/{amount}")
     public ResponseEntity<?> fill(@PathVariable(value = "amount") Long amount) {
-        UsuarioEntity oUsuarioEntitySession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
-        if (oUsuarioEntitySession == null) {
+        UsuarioEntity oUsuarioEntityFromSession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        if (oUsuarioEntityFromSession == null) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
-            if (oUsuarioEntitySession.getTipousuario().getId() == 1) {
+            if (oUsuarioEntityFromSession.getTipousuario().getId() == 1) {
                 return new ResponseEntity<Long>(oFillService.usuarioFill(amount), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
@@ -162,11 +169,11 @@ public class UsuarioController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
-        UsuarioEntity oUsuarioEntitySession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
-        if (oUsuarioEntitySession == null) {
+        UsuarioEntity oUsuarioEntityFromSession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        if (oUsuarioEntityFromSession == null) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
-            if (oUsuarioEntitySession.getTipousuario().getId() == 1) { //administrador
+            if (oUsuarioEntityFromSession.getTipousuario().getId() == 1) { //administrador
                 oUsuarioRepository.deleteById(id);
                 if (oUsuarioRepository.existsById(id)) {
                     return new ResponseEntity<Long>(id, HttpStatus.NOT_MODIFIED);
@@ -181,11 +188,11 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody UsuarioEntity oUsuarioEntityFromRequest) {
-        UsuarioEntity oUsuarioEntitySession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
-        if (oUsuarioEntitySession == null) {
+        UsuarioEntity oUsuarioEntityFromSession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        if (oUsuarioEntityFromSession == null) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
-            if (oUsuarioEntitySession.getTipousuario().getId() == 1) { //administrador
+            if (oUsuarioEntityFromSession.getTipousuario().getId() == 1) { //administrador
                 if (oUsuarioRepository.existsById(id)) {
                     UsuarioEntity oUsuarioEntityFromDatabase = oUsuarioRepository.getOne(id);
                     oUsuarioEntityFromRequest.setPassword(oUsuarioEntityFromDatabase.getPassword());
@@ -197,7 +204,7 @@ public class UsuarioController {
                     return new ResponseEntity<UsuarioEntity>(oUsuarioRepository.getOne(id), HttpStatus.NOT_FOUND);
                 }
             } else {  //cliente
-                if (oUsuarioEntitySession.getId() == id) {
+                if (oUsuarioEntityFromSession.getId() == id) {
                     UsuarioEntity oUsuarioEntityFromDatabase = oUsuarioRepository.getOne(id);
                     oUsuarioEntityFromRequest.setPassword(oUsuarioEntityFromDatabase.getPassword());
                     oUsuarioEntityFromRequest.setToken(oUsuarioEntityFromDatabase.getToken());
@@ -214,11 +221,11 @@ public class UsuarioController {
     @GetMapping("/page")
     public ResponseEntity<?> getPage(@RequestParam("filter") Optional<String> strSearch, @PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable) {
         Page<UsuarioEntity> oPage = null;
-        UsuarioEntity oUsuarioEntitySession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
-        if (oUsuarioEntitySession == null) {
+        UsuarioEntity oUsuarioEntityFromSession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        if (oUsuarioEntityFromSession == null) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
-            if (oUsuarioEntitySession.getTipousuario().getId() == 1) { //administrador
+            if (oUsuarioEntityFromSession.getTipousuario().getId() == 1) { //administrador
                 if (strSearch.isPresent()) {
                     oPage = oUsuarioRepository.findByDniContainingIgnoreCaseOrNombreContainingIgnoreCaseOrApellido1ContainingIgnoreCaseOrApellido2ContainingIgnoreCaseOrLoginContainingIgnoreCase(strSearch.get(), strSearch.get(), strSearch.get(), strSearch.get(), strSearch.get(), oPageable);
                 } else {
@@ -233,8 +240,8 @@ public class UsuarioController {
 
     @GetMapping("/page/tipousuario/{id}")
     public ResponseEntity<?> getPageXTipousuario(@PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable, @PathVariable(value = "id") Long id) {
-        UsuarioEntity oUsuarioEntitySession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
-        if (oUsuarioEntitySession == null) {
+        UsuarioEntity oUsuarioEntityFromSession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+        if (oUsuarioEntityFromSession == null) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
             if (oTipousuarioRepository.existsById(id)) {

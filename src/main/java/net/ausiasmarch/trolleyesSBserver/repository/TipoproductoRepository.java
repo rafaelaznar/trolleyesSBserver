@@ -2,11 +2,11 @@
  * Copyright (c) 2020
  *
  * by Rafael Angel Aznar Aparici (rafaaznar at gmail dot com) & 2020 DAW students
- * 
+ *
  * TROLLEYES: Free Open Source Shopping Site
  *
  *
- * Sources at:                https://github.com/rafaelaznar/trolleyesSBserver                            
+ * Sources at:                https://github.com/rafaelaznar/trolleyesSBserver
  * Database at:               https://github.com/rafaelaznar/trolleyesSBserver
  * Client at:                 https://github.com/rafaelaznar/TrolleyesAngularJSClient
  *
@@ -33,10 +33,13 @@
 package net.ausiasmarch.trolleyesSBserver.repository;
 
 import net.ausiasmarch.trolleyesSBserver.entity.TipoproductoEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TipoproductoRepository extends JpaRepository<TipoproductoEntity, Long>  {
-    
+public interface TipoproductoRepository extends JpaRepository<TipoproductoEntity, Long> {
+
+    Page<TipoproductoEntity> findByNombreContainingIgnoreCase(String nombre, Pageable pageable);
 }
