@@ -2,11 +2,11 @@
  * Copyright (c) 2020
  *
  * by Rafael Angel Aznar Aparici (rafaaznar at gmail dot com) & 2020 DAW students
- * 
+ *
  * TROLLEYES: Free Open Source Shopping Site
  *
  *
- * Sources at:                https://github.com/rafaelaznar/trolleyesSBserver                            
+ * Sources at:                https://github.com/rafaelaznar/trolleyesSBserver
  * Database at:               https://github.com/rafaelaznar/trolleyesSBserver
  * Client at:                 https://github.com/rafaelaznar/TrolleyesAngularJSClient
  *
@@ -49,16 +49,18 @@ public interface ProductoRepository extends JpaRepository<ProductoEntity, Long> 
 
     Page<ProductoEntity> findByTipoproducto(TipoproductoEntity oTipoproductoEntity, Pageable oPageable);
 
-    
     List<ProductoEntity> findTop10ByOrderByDescuentoDesc();
+
     List<ProductoEntity> findTop50ByOrderByDescuentoDesc();
+
     List<ProductoEntity> findTop100ByOrderByDescuentoDesc();
+
     List<ProductoEntity> findTop10ByOrderByDescuentoAsc();
+
     List<ProductoEntity> findTop50ByOrderByDescuentoAsc();
+
     List<ProductoEntity> findTop100ByOrderByDescuentoAsc();
 
-
     Page<ProductoEntity> findByCodigoContainingIgnoreCaseOrNombreContainingIgnoreCaseOrTipoproductoNombreContainingIgnoreCase(String codigo, String descripcion, String nombre, Pageable pageable);
-
 
 }
