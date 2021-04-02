@@ -175,8 +175,7 @@ public class ProductoController {
     }
 
     @GetMapping("/page")
-    public ResponseEntity<?> getPage(@RequestParam("filter") Optional<String> strSearch, @PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable
-    ) {
+    public ResponseEntity<?> getPage(@RequestParam("filter") Optional<String> strSearch, @PageableDefault(page = 0, size = 10, direction = Direction.ASC) Pageable oPageable) {
         Page<ProductoEntity> oPage = null;
         if (strSearch.isPresent()) {
             oPage = oProductoRepository.findByCodigoContainingIgnoreCaseOrNombreContainingIgnoreCaseOrTipoproductoNombreContainingIgnoreCase(strSearch.get(), strSearch.get(), strSearch.get(), oPageable);

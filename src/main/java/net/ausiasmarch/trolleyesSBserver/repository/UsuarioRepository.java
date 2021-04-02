@@ -44,7 +44,9 @@ import org.springframework.stereotype.Repository;
 public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Long> {
 
     UsuarioEntity findByLoginAndPassword(String login, String password);
-    
+
+    Page<UsuarioEntity> findByDniContainingIgnoreCaseOrNombreContainingIgnoreCaseOrApellido1ContainingIgnoreCaseOrApellido2ContainingIgnoreCaseOrLoginContainingIgnoreCase(String dni, String nombre, String apellido1, String apellido2, String login, Pageable pageable);
+
     @Query(value = "SELECT * FROM usuario u WHERE c.id_tipousuario = :id_tipousuario", nativeQuery = true)
     Page<UsuarioEntity> findByUsuarioXTipousuario(Long id_tipousuario, Pageable pageable);
 
