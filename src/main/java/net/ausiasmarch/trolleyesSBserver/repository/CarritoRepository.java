@@ -51,14 +51,16 @@ public interface CarritoRepository extends JpaRepository<CarritoEntity, Long> {
 
     Page<CarritoEntity> findByProducto(ProductoEntity oProductoEntity, Pageable oPageable);
 
+    Page<CarritoEntity> findByProductoAndUsuario(ProductoEntity oProductoEntity, UsuarioEntity oUsuarioEntity, Pageable oPageable);
+
     @Query(value = "SELECT * FROM carrito c WHERE c.id_usuario = :id_usuario", nativeQuery = true)
     Page<CarritoEntity> findByCarritoXUsuario(Long id_usuario, Pageable pageable);
 
     Page<CarritoEntity> findByUsuario(UsuarioEntity oUsuarioEntity, Pageable oPageable);
-    
+
     List<CarritoEntity> findAllByUsuario(UsuarioEntity oUsuarioEntity);
 
-    Long countByUsuarioAndProducto(UsuarioEntity oUsuarioEntity, ProductoEntity oProductoEntity);    
+    Long countByUsuarioAndProducto(UsuarioEntity oUsuarioEntity, ProductoEntity oProductoEntity);
 
     @Query(value = "SELECT * FROM carrito c WHERE c.id_usuario = :id_usuario and c.id_producto = :id_producto", nativeQuery = true)
     CarritoEntity findByUsuarioAndProducto(Long id_usuario, Long id_producto);
@@ -66,7 +68,7 @@ public interface CarritoRepository extends JpaRepository<CarritoEntity, Long> {
     Long deleteByUsuario(UsuarioEntity oUsuarioEntity);
 
     Long deleteByIdAndUsuario(Long id, UsuarioEntity oUsuarioEntity);
-        
-    CarritoEntity findByIdAndUsuario(Long idCarrito, UsuarioEntity oUsuarioEntity);            
-    
+
+    CarritoEntity findByIdAndUsuario(Long idCarrito, UsuarioEntity oUsuarioEntity);
+
 }
