@@ -76,11 +76,16 @@ public class ProductoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
-        if (oProductoRepository.existsById(id)) {
-            return new ResponseEntity<ProductoEntity>(oProductoRepository.getOne(id), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<ProductoEntity>(oProductoRepository.getOne(id), HttpStatus.NOT_FOUND);
-        }
+//        UsuarioEntity oUsuarioEntityFromSession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
+//        if (oUsuarioEntityFromSession == null) {
+//            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+//        } else {
+            if (oProductoRepository.existsById(id)) {
+                return new ResponseEntity<ProductoEntity>(oProductoRepository.getOne(id), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<ProductoEntity>(oProductoRepository.getOne(id), HttpStatus.NOT_FOUND);
+            }
+//        }
     }
 
     @GetMapping("/all")
@@ -191,11 +196,10 @@ public class ProductoController {
     }
 
     //-----------INFORMES------------
-
     @GetMapping("/orderdescuento/10/desc")
     public ResponseEntity<?> get10ProductoOrderByDescuentoDesc() {
         UsuarioEntity oUsuarioEntityFromSession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
-        if (oUsuarioEntityFromSession == null || oUsuarioEntityFromSession.getTipousuario().getId()!=1) {
+        if (oUsuarioEntityFromSession == null || oUsuarioEntityFromSession.getTipousuario().getId() != 1) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
             List<ProductoEntity> oPage = oProductoRepository.findTop10ByOrderByDescuentoDesc();
@@ -206,7 +210,7 @@ public class ProductoController {
     @GetMapping("/orderdescuento/50/desc")
     public ResponseEntity<?> get50ProductoOrderByDescuentoDesc() {
         UsuarioEntity oUsuarioEntityFromSession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
-        if (oUsuarioEntityFromSession == null || oUsuarioEntityFromSession.getTipousuario().getId()!=1) {
+        if (oUsuarioEntityFromSession == null || oUsuarioEntityFromSession.getTipousuario().getId() != 1) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
             List<ProductoEntity> oPage = oProductoRepository.findTop50ByOrderByDescuentoDesc();
@@ -217,7 +221,7 @@ public class ProductoController {
     @GetMapping("/orderdescuento/100/desc")
     public ResponseEntity<?> get100ProductoOrderByDescuentoDesc() {
         UsuarioEntity oUsuarioEntityFromSession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
-        if (oUsuarioEntityFromSession == null || oUsuarioEntityFromSession.getTipousuario().getId()!=1) {
+        if (oUsuarioEntityFromSession == null || oUsuarioEntityFromSession.getTipousuario().getId() != 1) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
             List<ProductoEntity> oPage = oProductoRepository.findTop100ByOrderByDescuentoDesc();
@@ -228,7 +232,7 @@ public class ProductoController {
     @GetMapping("/orderdescuento/10/asc")
     public ResponseEntity<?> get10ProductoOrderByDescuentoAsc() {
         UsuarioEntity oUsuarioEntityFromSession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
-        if (oUsuarioEntityFromSession == null || oUsuarioEntityFromSession.getTipousuario().getId()!=1) {
+        if (oUsuarioEntityFromSession == null || oUsuarioEntityFromSession.getTipousuario().getId() != 1) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
             List<ProductoEntity> oPage = oProductoRepository.findTop10ByOrderByDescuentoAsc();
@@ -239,7 +243,7 @@ public class ProductoController {
     @GetMapping("/orderdescuento/50/asc")
     public ResponseEntity<?> get50ProductoOrderByDescuentoAsc() {
         UsuarioEntity oUsuarioEntityFromSession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
-        if (oUsuarioEntityFromSession == null || oUsuarioEntityFromSession.getTipousuario().getId()!=1) {
+        if (oUsuarioEntityFromSession == null || oUsuarioEntityFromSession.getTipousuario().getId() != 1) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
             List<ProductoEntity> oPage = oProductoRepository.findTop50ByOrderByDescuentoAsc();
@@ -250,7 +254,7 @@ public class ProductoController {
     @GetMapping("/orderdescuento/100/asc")
     public ResponseEntity<?> get100ProductoOrderByDescuentoAsc() {
         UsuarioEntity oUsuarioEntityFromSession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
-        if (oUsuarioEntityFromSession == null || oUsuarioEntityFromSession.getTipousuario().getId()!=1) {
+        if (oUsuarioEntityFromSession == null || oUsuarioEntityFromSession.getTipousuario().getId() != 1) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
             List<ProductoEntity> oPage = oProductoRepository.findTop100ByOrderByDescuentoAsc();
