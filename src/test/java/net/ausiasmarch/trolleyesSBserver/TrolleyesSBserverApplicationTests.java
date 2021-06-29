@@ -43,8 +43,8 @@ class TrolleyesSBserverApplicationTests {
 
     @Test
     public void testAppController() {
-        AppController homeController = new AppController();
-        String result = homeController.info().getBody();
+        AppController oAppController = new AppController();
+        String result = oAppController.shortInfo().getBody();
         assertEquals(result, "Welcome to TROLLEYES Server");
     }
 
