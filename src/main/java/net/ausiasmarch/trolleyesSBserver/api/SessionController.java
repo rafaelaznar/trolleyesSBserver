@@ -59,7 +59,11 @@ public class SessionController {
     @GetMapping("/")
     public ResponseEntity<?> check() {
         UsuarioEntity oSessionUsuarioEntity = (UsuarioEntity) oHttpSession.getAttribute("usuario");
-        oSessionUsuarioEntity = oUsuarioRepository.findById(oSessionUsuarioEntity.getId()).get();
+        try {
+            oSessionUsuarioEntity = oUsuarioRepository.findById(oSessionUsuarioEntity.getId()).get();
+        } catch (Exception ex) {
+            oSessionUsuarioEntity = null;
+        }
         if (oSessionUsuarioEntity == null) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } else {
