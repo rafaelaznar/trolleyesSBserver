@@ -34,7 +34,10 @@ package net.ausiasmarch.trolleyesSBserver.api;
 
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import net.ausiasmarch.trolleyesSBserver.entity.ProductoEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.TipoproductoEntity;
 import net.ausiasmarch.trolleyesSBserver.entity.UsuarioEntity;
@@ -73,6 +76,9 @@ public class ProductoController {
 
     @Autowired
     FillService oFillService;
+    
+    @PersistenceContext    
+    private EntityManager entityManager;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
@@ -80,11 +86,11 @@ public class ProductoController {
 //        if (oUsuarioEntityFromSession == null) {
 //            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
 //        } else {
-            if (oProductoRepository.existsById(id)) {
-                return new ResponseEntity<ProductoEntity>(oProductoRepository.getOne(id), HttpStatus.OK);
-            } else {
-                return new ResponseEntity<ProductoEntity>(oProductoRepository.getOne(id), HttpStatus.NOT_FOUND);
-            }
+        if (oProductoRepository.existsById(id)) {
+            return new ResponseEntity<ProductoEntity>(oProductoRepository.getOne(id), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<ProductoEntity>(oProductoRepository.getOne(id), HttpStatus.NOT_FOUND);
+        }
 //        }
     }
 
@@ -102,6 +108,7 @@ public class ProductoController {
         return new ResponseEntity<Long>(oProductoRepository.count(), HttpStatus.OK);
     }
 
+    @Transactional
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestBody ProductoEntity oProductoEntityFromRequest) {
         UsuarioEntity oUsuarioEntityFromSession = (UsuarioEntity) oHttpSession.getAttribute("usuario");
@@ -110,7 +117,10 @@ public class ProductoController {
         } else {
             if (oUsuarioEntityFromSession.getTipousuario().getId() == 1) {
                 if (oProductoEntityFromRequest.getId() == null) {
-                    return new ResponseEntity<ProductoEntity>(oProductoRepository.save(oProductoEntityFromRequest), HttpStatus.OK);
+                    ProductoEntity oProductoEntity = oProductoRepository.saveAndFlush(oProductoEntityFromRequest);
+                    entityManager.refresh(oProductoEntity);
+                    //oProductoRepository.findById(oProductoRepository.saveAndFlush(oProductoEntityFromRequest).getId()).get()
+                    return new ResponseEntity<ProductoEntity>(oProductoEntity, HttpStatus.OK);
                 } else {
                     return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
                 }
