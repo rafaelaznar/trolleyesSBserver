@@ -76,8 +76,8 @@ public class ProductoController {
 
     @Autowired
     FillService oFillService;
-    
-    @PersistenceContext    
+
+    @PersistenceContext
     private EntityManager entityManager;
 
     @GetMapping("/{id}")
@@ -119,7 +119,7 @@ public class ProductoController {
                 if (oProductoEntityFromRequest.getId() == null) {
                     ProductoEntity oProductoEntity = oProductoRepository.saveAndFlush(oProductoEntityFromRequest);
                     entityManager.refresh(oProductoEntity);
-                    //oProductoRepository.findById(oProductoRepository.saveAndFlush(oProductoEntityFromRequest).getId()).get()
+                    //ProductoEntity oProductoEntity = oProductoRepository.findById(oProductoRepository.saveAndFlush(oProductoEntityFromRequest).getId()).get(); // Dont refresh tipoproducto
                     return new ResponseEntity<ProductoEntity>(oProductoEntity, HttpStatus.OK);
                 } else {
                     return new ResponseEntity<Long>(0L, HttpStatus.NOT_MODIFIED);
